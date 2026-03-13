@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +29,12 @@ public class NoticiaController {
 
     @Autowired
     private NoticiaService noticiaService;
+
+    @Value("${admin.user}")
+    private String adminUser;
+
+    @Value("${admin.password}")
+    private String adminPassword;
 
     @GetMapping("/paginaPrincipal")
     public String paginaPrincipal(Model model) {
@@ -53,7 +60,7 @@ public class NoticiaController {
                                 HttpSession session) {
         
         // Validación (puedes cambiar esto por una consulta a la DB)
-        if ("admin".equals(usuario) && "A1B2C3789".equals(password)) {
+        if (adminUser.equals(usuario) && adminPassword.equals(password)) {
             // GUARDAMOS LA SESIÓN: "usuarioLogueado" será nuestra marca
             session.setAttribute("usuarioLogueado", usuario);
             return "redirect:/admin";
