@@ -4,8 +4,8 @@ WORKDIR /app
 
 COPY . .
 
-RUN ./mvnw clean package -DskipTests
+RUN mvn clean package -DskipTests
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "target/proyecto-0.0.1-SNAPSHOT.jar"]
+CMD ["java","-jar","target/proyecto-0.0.1-SNAPSHOT.jar"]
