@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panorama Litoral — Administración</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #f7f4ed; --ink: #1a1712; --mid: #5a5650;
+  --accent: #b5251b; --border: #c8c3b8; --white: #ffffff;
+}
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Libre Baskerville', Georgia, serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header { background: var(--white); border-bottom: 3px double var(--ink); text-align: center; padding: 18px 24px 14px; }
+.header-date { font-family: 'Oswald', sans-serif; font-size: 11.2px; letter-spacing: .18em; text-transform: uppercase; color: var(--mid); margin-bottom: 8px; }
+.masthead { font-family: 'Oswald', sans-serif; font-size: clamp(40px, 6vw, 65px); font-weight: 700; line-height: 1; color: var(--ink); text-transform: uppercase; text-decoration: none; display: inline-block; }
+.masthead em { font-style: normal; color: var(--accent); }
+.header-rule { width: 100%; height: 1px; background: var(--border); margin-top: 12px; }
+
+.topbar { background: var(--ink); padding: 0 24px; }
+.topbar-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+.topbar-title { font-family: 'Oswald', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.55); padding: 13px 0; }
+.topbar-btn { font-family: 'Oswald', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; border: none; padding: 13px 20px; cursor: pointer; color: rgba(255,255,255,.55); background: rgba(255,255,255,.07); border-left: 1px solid rgba(255,255,255,.08); transition: all .14s; }
+.topbar-btn:hover { color: white; background: rgba(255,255,255,.13); }
+.topbar-btn.new { background: #1e5c2a; color: white; border-radius: 0; }
+.topbar-btn.new:hover { background: #267a35; }
+
+.wrap { width: 100%; max-width: 1200px; margin: 0 auto; padding: 32px 24px 60px; flex: 1; }
+.table-box { background: var(--white); border: 1.5px solid var(--border); animation: up .35s ease both; }
+@keyframes up { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+table { width: 100%; border-collapse: collapse; }
+thead tr { border-bottom: 3px double var(--ink); background: var(--ink); }
+th {
+  padding: 13px 16px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.7);
+  text-align: center;
+}
+th:first-child { text-align: left; }
+th.col-acc { width: 150px; text-align: center; }
+
+tbody tr { border-bottom: 1px solid var(--border); transition: background .12s; }
+td { padding: 14px 16px; vertical-align: middle; text-align: center; }
+td:first-child { text-align: left; }
+
+.td-titular { font-family: 'Libre Baskerville', serif; font-size: 14px; font-weight: 700; line-height: 1.3; color: var(--ink); }
+.td-volanta { font-family: 'Oswald', sans-serif; font-size: 10.5px; letter-spacing: .07em; text-transform: uppercase; color: var(--mid); margin-top: 3px; }
+.td-fecha { font-family: 'Oswald', sans-serif; font-size: 15px; color: var(--mid); white-space: nowrap; }
+.tag { font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; padding: 3px 8px; color: white; display: inline-block; }
+
+.td-acc { text-align: center; white-space: nowrap; }
+.btn {
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  border: 1.5px solid var(--border);
+  background: none;
+  padding: 5px 12px;
+  cursor: pointer;
+  color: var(--mid);
+  text-decoration: none;
+  display: inline-block;
+  margin: 0 2px;
+}
+.btn.edit:hover { border-color: var(--ink); color: var(--ink); background: #f0ece3; }
+.btn.del:hover  { border-color: var(--accent); color: var(--accent); background: #fef5f4; }
+
+footer { border-top: 3px double var(--ink); background: var(--ink); padding: 16px 24px; text-align: center; color: white; }
+footer p { font-size: 14px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-date" th:text="${#calendars.format(#calendars.createNow(), 'EEEE d ''de'' MMMM ''de'' yyyy')} + ' · Paraná, Entre Ríos'">—</div>
+  <a th:href="@{/}" class="masthead">Panorama <em>Litoral</em></a>
+  <div class="header-rule"></div>
+</header>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-title">Panel Editorial</div>
+    <div style="display:flex;">
+      <a th:href="@{/cargarNoticia}" class="topbar-btn new">+ Nueva noticia</a>
+      <a th:href="@{/logout}" class="topbar-btn">Cerrar Sesión</a>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="table-box">
+    <table>
+      <thead>
+        <tr>
+          <th>Titular</th>
+          <th>Sección</th>
+          <th class="col-fecha">Fecha de publicación</th>
+          <th class="col-acc">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="noticia : ${noticias}">
+          <td>
+            <div class="td-titular" th:text="${noticia.titulo}">TÍTULO</div>
+            <div class="td-volanta" th:text="${noticia.volanta}">VOLANTA</div>
+          </td>
+          <td>
+           <span class="tag" 
+                th:text="${noticia.tipo}"
+                th:style="${#strings.toUpperCase(noticia.tipo) == 'LOCALES'    ? 'background:#b5251b' :
+                          #strings.toUpperCase(noticia.tipo) == 'NACIONALES'  ? 'background:#1a3a5c' :
+                          #strings.toUpperCase(noticia.tipo) == 'GREMIAL'     ? 'background:#1e5c2a' :
+                          #strings.toUpperCase(noticia.tipo) == 'POLICIALES'  ? 'background:#1e3a4a' :
+                          #strings.toUpperCase(noticia.tipo) == 'POLÍTICA'    ? 'background:#6b1f3a' :
+                          #strings.toUpperCase(noticia.tipo) == 'POLITICA'    ? 'background:#6b1f3a' :
+                          #strings.toUpperCase(noticia.tipo) == 'ECONOMÍA'    ? 'background:#1a4a3a' :
+                          #strings.toUpperCase(noticia.tipo) == 'ECONOMIA'    ? 'background:#1a4a3a' :
+                          #strings.toUpperCase(noticia.tipo) == 'DEPORTES'    ? 'background:#1a4d8c' :
+                                                                                'background:#1a1712'}">
+          </span>
+          </td>
+          <td class="td-fecha" th:text="${#temporals.format(noticia.fechaPublicacion, 'dd/MM/yyyy')}">FECHA</td>
+          <td class="td-acc">
+            <a th:href="@{/editarNoticia/{id}(id=${noticia.id})}" class="btn edit">Editar</a>
+            <form th:action="@{/eliminarNoticia/{id}(id=${noticia.id})}" method="post" style="display:inline"
+              onsubmit="return confirm('¿Estás seguro de eliminar esta noticia?')">
+              <button type="submit" class="btn del">Borrar</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="empty" th:if="${#lists.isEmpty(noticias)}">
+      <span class="empty-icon">◻</span>
+      <div class="empty-title">No hay noticias cargadas en la base de datos</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

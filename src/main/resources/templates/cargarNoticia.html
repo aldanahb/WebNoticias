@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panorama Litoral — Cargar noticia</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Oswald:wght@400;600;700&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f7f4ed;
+  --ink: #1a1712;
+  --mid: #5a5650;
+  --accent: #b5251b;
+  --border: #c8c3b8;
+  --white: #ffffff;
+  --green: #1e5c2a;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Libre Baskerville', Georgia, serif;
+  font-size: 16px;
+}
+
+/* ─── HEADER ─── */
+header {
+  background: var(--white);
+  border-bottom: 3px double var(--ink);
+  text-align: center;
+  padding: 18px 24px 14px;
+}
+.header-date {
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 8px;
+}
+.masthead {
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink);
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-block;
+}
+.masthead em { font-style: normal; color: var(--accent); }
+.header-rule { width: 100%; height: 1px; background: var(--border); margin-top: 12px; }
+
+/* ─── TOPBAR EDITOR ─── */
+.editor-topbar { background: var(--ink); padding: 0 24px; }
+.editor-topbar-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.editor-topbar-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.6);
+  padding: 12px 0;
+}
+.topbar-actions { display: flex; gap: 0; }
+.topbar-btn {
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  border: none;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background .15s;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.topbar-btn.secondary {
+  background: rgba(255,255,255,.07);
+  color: rgba(255,255,255,.6);
+  border-right: 1px solid rgba(255,255,255,.08);
+}
+.topbar-btn.secondary:hover { background: rgba(255,255,255,.12); color: white; }
+.topbar-btn.primary { background: var(--green); color: white; }
+.topbar-btn.primary:hover { background: #267a35; }
+
+/* ─── LAYOUT ─── */
+.editor-layout {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 36px 24px 60px;
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: 32px;
+  align-items: start;
+}
+
+/* ─── FORM SECTIONS ─── */
+.form-main { min-width: 0; }
+
+.form-section {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  margin-bottom: 20px;
+  animation: up .35s ease both;
+}
+.form-section:nth-child(2) { animation-delay: .04s; }
+.form-section:nth-child(3) { animation-delay: .08s; }
+.form-section:nth-child(4) { animation-delay: .12s; }
+.form-section:nth-child(5) { animation-delay: .16s; }
+
+@keyframes up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.form-section-header {
+  padding: 13px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #faf8f3;
+}
+.form-section-num {
+  width: 22px; height: 22px;
+  background: var(--ink);
+  color: white;
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.form-section-label {
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.form-section-hint {
+  font-family: 'Oswald', sans-serif;
+  font-size: 10px;
+  letter-spacing: .06em;
+  color: var(--mid);
+  margin-left: auto;
+}
+.form-section-body { padding: 20px; }
+
+.field { margin-bottom: 0; }
+.field + .field { margin-top: 18px; }
+
+.field label {
+  display: block;
+  font-family: 'Oswald', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 6px;
+}
+
+.field input[type="text"],
+.field textarea {
+  width: 100%;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  padding: 10px 13px;
+  font-family: 'Libre Baskerville', serif;
+  font-size: 14px;
+  color: var(--ink);
+  outline: none;
+  transition: border-color .15s, background .15s;
+  resize: vertical;
+}
+.field input[type="text"]:focus,
+.field textarea:focus {
+  border-color: var(--ink);
+  background: var(--white);
+}
+.field input::placeholder,
+.field textarea::placeholder { color: #c0b9ae; font-style: italic; }
+
+.field textarea { line-height: 1.65; min-height: 80px; }
+.field textarea.tall { min-height: 160px; }
+.field textarea.xtall { min-height: 240px; }
+
+.char-count {
+  font-family: 'Oswald', sans-serif;
+  font-size: 10px;
+  letter-spacing: .06em;
+  color: var(--border);
+  text-align: right;
+  margin-top: 5px;
+  transition: color .2s;
+}
+.char-count.warn { color: #c9a227; }
+.char-count.over { color: var(--accent); }
+
+/* Imagen */
+.image-drop {
+  border: 2px dashed var(--border);
+  background: var(--bg);
+  padding: 32px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .2s, background .2s;
+  position: relative;
+}
+.image-drop:hover, .image-drop.drag-over {
+  border-color: var(--ink);
+  background: #f0ece3;
+}
+.image-drop input[type="file"] {
+  position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+}
+.image-drop-icon { font-size: 28px; margin-bottom: 10px; color: var(--border); display: block; }
+.image-drop-text {
+  font-family: 'Oswald', sans-serif; font-size: 12px;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--mid);
+}
+.image-drop-sub {
+  font-family: 'Oswald', sans-serif; font-size: 10px;
+  color: var(--border); margin-top: 4px; letter-spacing: .06em;
+}
+.image-preview { display: none; margin-top: 14px; position: relative; }
+.image-preview img {
+  width: 100%; max-height: 200px; object-fit: cover; display: block;
+  border: 1px solid var(--border);
+}
+.image-preview-remove {
+  position: absolute; top: 6px; right: 6px;
+  background: rgba(0,0,0,.65); color: white; border: none;
+  width: 26px; height: 26px; border-radius: 50%; cursor: pointer;
+  font-size: 14px; display: flex; align-items: center; justify-content: center;
+}
+
+/* ─── SIDEBAR ─── */
+.form-sidebar {
+  position: sticky;
+  top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sidebar-card { background: var(--white); border: 1.5px solid var(--border); }
+.sidebar-card-header {
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border);
+  font-family: 'Oswald', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--mid);
+  background: #faf8f3;
+}
+.sidebar-card-body { padding: 16px; }
+
+.seccion-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+}
+.seccion-opt {
+  border: 1.5px solid var(--border);
+  padding: 8px 6px;
+  text-align: center;
+  cursor: pointer;
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--mid);
+  transition: all .15s;
+  user-select: none;
+}
+.seccion-opt:hover { border-color: var(--ink); color: var(--ink); }
+.seccion-opt.selected { background: var(--ink); border-color: var(--ink); color: white; }
+.seccion-opt.selected[data-color="#b5251b"] { background: #b5251b; border-color: #b5251b; }
+.seccion-opt.selected[data-color="#1a3a5c"] { background: #1a3a5c; border-color: #1a3a5c; }
+.seccion-opt.selected[data-color="#1e5c2a"] { background: #1e5c2a; border-color: #1e5c2a; }
+.seccion-opt.selected[data-color="#1e3a4a"] { background: #1e3a4a; border-color: #1e3a4a; }
+.seccion-opt.selected[data-color="#6b1f3a"] { background: #6b1f3a; border-color: #6b1f3a; }
+.seccion-opt.selected[data-color="#1a4a3a"] { background: #1a4a3a; border-color: #1a4a3a; }
+.seccion-opt.selected[data-color="#1a4d8c"] { background: #1a4d8c; border-color: #1a4d8c; }
+
+.preview-mini {
+  border-left: 3px solid var(--border);
+  padding-left: 12px;
+  transition: border-color .2s;
+}
+.preview-mini-tag {
+  font-family: 'Oswald', sans-serif;
+  font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  padding: 2px 7px; color: white; background: var(--mid);
+  display: inline-block; margin-bottom: 8px;
+}
+.preview-mini-title {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 13px; font-weight: 700; line-height: 1.3;
+  color: var(--ink); margin-bottom: 6px;
+}
+.preview-mini-bajada {
+  font-family: 'Lora', serif;
+  font-size: 11.5px; color: var(--mid); line-height: 1.5;
+}
+
+.status-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); flex-shrink: 0; }
+.status-dot.ok { background: #2ecc71; }
+.status-label {
+  font-family: 'Oswald', sans-serif; font-size: 11px;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--mid);
+}
+
+/* ─── FOOTER ─── */
+footer {
+  border-top: 3px double var(--ink);
+  background: var(--ink);
+  padding: 16px 24px;
+  text-align: center;
+}
+footer p {
+  font-family: 'Oswald', sans-serif; font-size: 11px;
+  letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.35);
+}
+footer strong { color: rgba(255,255,255,.6); }
+
+@media (max-width: 700px) {
+  .editor-layout { grid-template-columns: 1fr; }
+  .form-sidebar { position: static; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-date" id="header-date">—</div>
+  <a th:href="@{/}" class="masthead">Panorama <em>Litoral</em></a>
+  <div class="header-rule"></div>
+</header>
+
+<div class="editor-topbar">
+  <div class="editor-topbar-inner">
+    <div class="editor-topbar-title"
+         th:text="${noticia != null and noticia.id != null} ? '✏ Editando noticia' : '✏ Cargar nueva noticia'">
+      ✏ Cargar nueva noticia
+    </div>
+    <div class="topbar-actions">
+      <button type="button" class="topbar-btn secondary" onclick="limpiarFormulario()">↺ Limpiar</button>
+      <button type="button" class="topbar-btn primary" onclick="publicarNoticia()"
+              th:text="${noticia != null and noticia.id != null} ? '▶ Guardar cambios' : '▶ Publicar'">
+        ▶ Publicar
+      </button>
+    </div>
+  </div>
+</div>
+
+<form id="form-noticia" method="post" th:action="@{/guardarNoticia}" enctype="multipart/form-data">
+
+  <!-- ID para modo edición -->
+  <input type="hidden" name="id" th:value="${noticia != null ? noticia.id : ''}">
+
+  <div class="editor-layout">
+
+    <!-- ── FORMULARIO ── -->
+    <div class="form-main">
+
+      <!-- 1. Volanta -->
+      <div class="form-section">
+        <div class="form-section-header">
+          <div class="form-section-num">1</div>
+          <div class="form-section-label">Volanta</div>
+        </div>
+        <div class="form-section-body">
+          <div class="field">
+            <input type="text" id="volanta" name="volanta"
+              th:value="${noticia != null ? noticia.volanta : ''}"
+              oninput="updateCounter(this,'cnt-volanta',80); updatePreview()">
+            <div class="char-count" id="cnt-volanta">0 / 80</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Titular -->
+      <div class="form-section">
+        <div class="form-section-header">
+          <div class="form-section-num">2</div>
+          <div class="form-section-label">Titular</div>
+        </div>
+        <div class="form-section-body">
+          <div class="field">
+            <input type="text" id="titular" name="titular"
+              th:value="${noticia != null ? noticia.titulo : ''}"
+              oninput="updateCounter(this,'cnt-titular',120); updatePreview()">
+            <div class="char-count" id="cnt-titular">0 / 120</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Bajada -->
+      <div class="form-section">
+        <div class="form-section-header">
+          <div class="form-section-num">3</div>
+          <div class="form-section-label">Bajada / Subtítulo</div>
+        </div>
+        <div class="form-section-body">
+          <div class="field">
+            <textarea id="bajada" name="bajada"
+              oninput="updateCounter(this,'cnt-bajada',200); updatePreview()"
+              th:text="${noticia != null ? noticia.bajada : ''}"></textarea>
+            <div class="char-count" id="cnt-bajada">0 / 200</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Copete -->
+      <div class="form-section">
+        <div class="form-section-header">
+          <div class="form-section-num">4</div>
+          <div class="form-section-label">Copete</div>
+        </div>
+        <div class="form-section-body">
+          <div class="field">
+            <textarea id="copete" name="copete" class="tall"
+              oninput="updateCounter(this,'cnt-copete',600)"
+              th:text="${noticia != null ? noticia.copete : ''}"></textarea>
+            <div class="char-count" id="cnt-copete">0 / 600</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Cuerpo -->
+      <div class="form-section">
+        <div class="form-section-header">
+          <div class="form-section-num">5</div>
+          <div class="form-section-label">Cuerpo</div>
+        </div>
+        <div class="form-section-body">
+          <div class="field">
+            <textarea id="cuerpo" name="cuerpo" class="xtall"
+              th:text="${noticia != null ? noticia.cuerpo : ''}"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. Imagen -->
+      <div class="form-section">
+        <div class="form-section-header">
+          <div class="form-section-num">6</div>
+          <div class="form-section-label">Imagen</div>
+          <div class="form-section-hint">JPG, PNG o WEBP</div>
+        </div>
+        <div class="form-section-body">
+          <div class="image-drop" id="image-drop">
+            <input type="file" id="imagen-input" name="imagen" accept="image/*"
+              onchange="handleImageChange(this)">
+            <span class="image-drop-icon">▦</span>
+            <div class="image-drop-text">Hacé clic o arrastrá una imagen</div>
+            <div class="image-drop-sub">JPG · PNG · WEBP — máx. 5 MB</div>
+          </div>
+          <div class="image-preview" id="image-preview">
+            <img id="preview-img" src="" alt="Preview">
+            <button type="button" class="image-preview-remove" onclick="removeImage()">✕</button>
+          </div>
+          <div class="field" style="margin-top:14px;">
+            <label for="epigrafe">Epígrafe</label>
+            <input type="text" id="epigrafe" name="epigrafe"
+              th:value="${noticia != null ? noticia.epigrafe : ''}"
+              oninput="updateCounter(this,'cnt-epigrafe',200)">
+            <div class="char-count" id="cnt-epigrafe">0 / 200</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /form-main -->
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="form-sidebar">
+
+      <!-- Campo hidden para sección -->
+      <input type="hidden" id="seccion-hidden" name="tipo"
+             th:value="${noticia != null ? noticia.tipo : 'Locales'}">
+
+      <!-- Sección -->
+      <div class="sidebar-card">
+        <div class="sidebar-card-header">Sección</div>
+        <div class="sidebar-card-body">
+          <div class="seccion-grid">
+            <div class="seccion-opt" data-id="locales"    data-color="#b5251b" onclick="selSeccion(this)">Locales</div>
+            <div class="seccion-opt" data-id="nacionales" data-color="#1a3a5c" onclick="selSeccion(this)">Nacionales</div>
+            <div class="seccion-opt" data-id="gremial"    data-color="#1e5c2a" onclick="selSeccion(this)">Gremial</div>
+            <div class="seccion-opt" data-id="policiales" data-color="#1e3a4a" onclick="selSeccion(this)">Policiales</div>
+            <div class="seccion-opt" data-id="politica"   data-color="#6b1f3a" onclick="selSeccion(this)">Política</div>
+            <div class="seccion-opt" data-id="economia"   data-color="#1a4a3a" onclick="selSeccion(this)">Economía</div>
+            <div class="seccion-opt" data-id="deportes"   data-color="#1a4d8c" onclick="selSeccion(this)">Deportes</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vista previa -->
+      <div class="sidebar-card">
+        <div class="sidebar-card-header">Vista previa</div>
+        <div class="sidebar-card-body">
+          <div class="preview-mini" id="preview-mini">
+            <div class="preview-mini-tag" id="preview-tag">Locales</div>
+            <div class="preview-mini-title" id="preview-title"
+              style="color:var(--border); font-style:italic;"></div>
+            <div class="preview-mini-bajada" id="preview-bajada"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estado -->
+      <div class="sidebar-card">
+        <div class="sidebar-card-header">Estado</div>
+        <div class="sidebar-card-body">
+          <div class="status-row"><div class="status-dot" id="st-titular"></div><div class="status-label">Titular</div></div>
+          <div class="status-row"><div class="status-dot" id="st-bajada"></div><div class="status-label">Bajada</div></div>
+          <div class="status-row"><div class="status-dot" id="st-copete"></div><div class="status-label">Copete</div></div>
+          <div class="status-row"><div class="status-dot" id="st-cuerpo"></div><div class="status-label">Cuerpo</div></div>
+          <div class="status-row"><div class="status-dot" id="st-imagen"></div><div class="status-label">Imagen</div></div>
+        </div>
+      </div>
+
+    </aside>
+
+  </div><!-- /editor-layout -->
+
+</form>
+
+<footer>
+  <p><strong>Panorama Litoral</strong> · Paraná, Entre Ríos · © 2026</p>
+</footer>
+
+<script th:inline="javascript">
+  // Fecha
+  const d = new Date();
+  const dias  = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  document.getElementById('header-date').textContent =
+    `${dias[d.getDay()]} ${d.getDate()} de ${meses[d.getMonth()]} de ${d.getFullYear()} · Paraná, Entre Ríos`;
+
+  // Datos de la noticia si estamos editando (inyectados por Thymeleaf)
+  const tipoActual   = /*[[${noticia != null ? noticia.tipo : 'Locales'}]]*/ 'Locales';
+  const imagenActual = /*[[${noticia != null ? noticia.imagen : null}]]*/ null;
+
+  const COLORES = {
+    'Locales':    '#b5251b',
+    'Nacionales': '#1a3a5c',
+    'Gremial':    '#1e5c2a',
+    'Policiales': '#1e3a4a',
+    'Política':   '#6b1f3a',
+    'Economía':   '#1a4a3a',
+    'Deportes':   '#1a4d8c',
+  };
+
+  let seccionActual = {
+    id:     tipoActual.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''),
+    nombre: tipoActual,
+    color:  COLORES[tipoActual] || '#1a1712'
+  };
+
+  // Seleccionar la sección correcta al cargar
+  document.querySelectorAll('.seccion-opt').forEach(opt => {
+    if (opt.textContent.trim() === tipoActual) {
+      opt.classList.add('selected');
+    }
+  });
+  document.getElementById('preview-tag').textContent   = seccionActual.nombre;
+  document.getElementById('preview-tag').style.background = seccionActual.color;
+  document.getElementById('preview-mini').style.borderColor = seccionActual.color;
+
+  // Si hay imagen existente, mostrarla
+  if (imagenActual) {
+    document.getElementById('preview-img').src = imagenActual;
+    document.getElementById('image-preview').style.display = 'block';
+    document.getElementById('image-drop').style.display = 'none';
+  }
+
+  // Inicializar contadores con valores precargados
+  [
+    ['volanta',  'cnt-volanta',  80],
+    ['titular',  'cnt-titular',  120],
+    ['bajada',   'cnt-bajada',   200],
+    ['copete',   'cnt-copete',   600],
+    ['epigrafe', 'cnt-epigrafe', 200],
+  ].forEach(([id, cntId, max]) => {
+    const el = document.getElementById(id);
+    if (el && el.value) updateCounter(el, cntId, max);
+  });
+
+  updatePreview();
+  updateStatus();
+
+  function selSeccion(el) {
+    document.querySelectorAll('.seccion-opt').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    seccionActual = { id: el.dataset.id, nombre: el.textContent.trim(), color: el.dataset.color };
+    document.getElementById('seccion-hidden').value = seccionActual.nombre;
+    document.getElementById('preview-tag').style.background = seccionActual.color;
+    document.getElementById('preview-tag').textContent = seccionActual.nombre;
+    document.getElementById('preview-mini').style.borderColor = seccionActual.color;
+    updateStatus();
+  }
+
+  function updateCounter(el, counterId, max) {
+    const len = el.value.length;
+    const cnt = document.getElementById(counterId);
+    cnt.textContent = `${len} / ${max}`;
+    cnt.classList.toggle('warn', len > max * 0.85);
+    cnt.classList.toggle('over', len >= max);
+    updateStatus();
+  }
+
+  function updatePreview() {
+    const titular = document.getElementById('titular').value;
+    const bajada  = document.getElementById('bajada').value;
+    const title   = document.getElementById('preview-title');
+    const bajEl   = document.getElementById('preview-bajada');
+    if (titular) {
+      title.textContent = titular;
+      title.style.color = '';
+      title.style.fontStyle = '';
+    } else {
+      title.textContent = '';
+      title.style.color = 'var(--border)';
+      title.style.fontStyle = 'italic';
+    }
+    bajEl.textContent = bajada || '';
+  }
+
+  function updateStatus() {
+    const campos = {
+      titular: document.getElementById('titular').value.trim(),
+      bajada:  document.getElementById('bajada').value.trim(),
+      copete:  document.getElementById('copete').value.trim(),
+      cuerpo:  document.getElementById('cuerpo').value.trim(),
+    };
+    Object.entries(campos).forEach(([key, val]) => {
+      document.getElementById(`st-${key}`).classList.toggle('ok', val.length > 0);
+    });
+    const tieneImagenNueva  = document.getElementById('imagen-input').files.length > 0;
+    const tieneImagenPrevia = document.getElementById('preview-img').src && document.getElementById('preview-img').src !== window.location.href;
+    document.getElementById('st-imagen').classList.toggle('ok', tieneImagenNueva || tieneImagenPrevia);
+  }
+
+  function handleImageChange(input) {
+    if (!input.files || !input.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      document.getElementById('preview-img').src = e.target.result;
+      document.getElementById('image-preview').style.display = 'block';
+      document.getElementById('image-drop').style.display = 'none';
+    };
+    reader.readAsDataURL(input.files[0]);
+    updateStatus();
+  }
+
+  function removeImage() {
+    document.getElementById('imagen-input').value = '';
+    document.getElementById('image-preview').style.display = 'none';
+    document.getElementById('image-drop').style.display = 'block';
+    document.getElementById('preview-img').src = '';
+    updateStatus();
+  }
+
+  const drop = document.getElementById('image-drop');
+  drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('drag-over'); });
+  drop.addEventListener('dragleave', () => drop.classList.remove('drag-over'));
+  drop.addEventListener('drop', e => {
+    e.preventDefault(); drop.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const dt = new DataTransfer(); dt.items.add(file);
+      document.getElementById('imagen-input').files = dt.files;
+      handleImageChange(document.getElementById('imagen-input'));
+    }
+  });
+
+  function publicarNoticia() {
+    const titular = document.getElementById('titular').value.trim();
+    if (!titular) {
+      document.getElementById('titular').focus();
+      document.getElementById('titular').style.borderColor = 'var(--accent)';
+      setTimeout(() => document.getElementById('titular').style.borderColor = '', 1500);
+      return;
+    }
+    document.getElementById('form-noticia').submit();
+  }
+
+  function limpiarFormulario() {
+    ['volanta','titular','bajada','copete','cuerpo','epigrafe'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    removeImage();
+    [
+      ['cnt-volanta', 80], ['cnt-titular', 120], ['cnt-bajada', 200],
+      ['cnt-copete', 600], ['cnt-epigrafe', 200]
+    ].forEach(([id, max]) => {
+      const el = document.getElementById(id);
+      if (el) { el.textContent = `0 / ${max}`; el.className = 'char-count'; }
+    });
+    updatePreview();
+    updateStatus();
+  }
+
+  ['bajada','copete','cuerpo'].forEach(id => {
+    document.getElementById(id).addEventListener('input', updateStatus);
+  });
+</script>
+
+</body>
+</html>

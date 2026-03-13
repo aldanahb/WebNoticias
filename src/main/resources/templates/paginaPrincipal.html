@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panorama Litoral</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Oswald:wght@400;600;700&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f7f4ed;
+  --ink: #1a1712;
+  --mid: #5a5650;
+  --accent: #b5251b;
+  --border: #c8c3b8;
+  --white: #ffffff;
+  --col: 640px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Libre Baskerville', Georgia, serif;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* ─── HEADER ─── */
+header {
+  background: var(--white);
+  border-bottom: 3px double var(--ink);
+  text-align: center;
+  padding: 22px 24px 16px;
+}
+.header-date {
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 10px;
+}
+.masthead {
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(42px, 7vw, 80px);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink);
+  text-transform: uppercase;
+}
+.masthead em { font-style: normal; color: var(--accent); }
+.header-rule { width: 100%; height: 1px; background: var(--border); margin-top: 14px; }
+
+/* ─── NAV ─── */
+nav {
+  background: var(--ink);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.nav-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.nav-inner::-webkit-scrollbar { display: none; }
+nav a {
+  font-family: 'Oswald', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.65);
+  text-decoration: none;
+  padding: 13px 22px;
+  border-right: 1px solid rgba(255,255,255,.08);
+  white-space: nowrap;
+  transition: color .15s, background .15s;
+}
+nav a:hover { color: #fff; background: rgba(255,255,255,.07); }
+nav a.active { color: #fff; border-bottom: 3px solid var(--accent); }
+
+/* ─── TICKER ─── */
+.ticker {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+.ticker-tag {
+  font-family: 'Oswald', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--mid);
+  background: var(--border);
+  padding: 8px 14px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.ticker-track { overflow: hidden; flex: 1; }
+.ticker-scroll {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: scroll 36s linear infinite;
+}
+.ticker-scroll:hover { animation-play-state: paused; }
+.ticker-item {
+  font-family: 'Oswald', sans-serif;
+  font-size: 12px;
+  color: var(--ink);
+  padding: 8px 48px 8px 20px;
+}
+.ticker-item::after { content: '·'; margin-left: 24px; opacity: .4; }
+@keyframes scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ─── PAGE LAYOUT ─── */
+.page {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 200px 1fr 200px;
+  gap: 0;
+  align-items: start;
+  padding: 32px 24px;
+}
+
+/* ─── BANNER COLUMNS ─── */
+.banner-col {
+  padding: 0 20px;
+  position: sticky;
+  top: 52px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.banner-slot {
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  display: block;
+  text-decoration: none;
+  overflow: hidden;
+  transition: border-color .2s, box-shadow .2s;
+}
+.banner-slot:hover {
+  border-color: var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+.banner-label {
+  font-family: 'Oswald', sans-serif;
+  font-size: 9px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--mid);
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--border);
+  text-align: right;
+}
+.banner-body {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Banner A — verde */
+.b-a { background: #0d2b1a; }
+.b-a::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 60% 20%, rgba(50,160,80,.18), transparent 70%);
+}
+.b-a-mark {
+  width: 44px; height: 44px; border-radius: 8px;
+  background: #2ecc71;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700;
+  color: #0d2b1a; margin-bottom: 14px; position: relative;
+}
+.b-a h3 {
+  font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700;
+  color: #fff; line-height: 1.15; margin-bottom: 8px;
+  text-transform: uppercase; position: relative;
+}
+.b-a p {
+  font-family: 'Oswald', sans-serif; font-size: 11.5px;
+  color: rgba(255,255,255,.55); margin-bottom: 16px; line-height: 1.5; position: relative;
+}
+.b-a-btn {
+  background: #2ecc71; color: #0d2b1a;
+  font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase; padding: 8px 18px;
+  border: none; cursor: pointer; position: relative;
+}
+
+/* Banner B — azul */
+.b-b { background: #0b1f3a; }
+.b-b-fish { font-size: 34px; margin-bottom: 10px; position: relative; }
+.b-b h3 {
+  font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: 700;
+  color: #fff; line-height: 1.2; text-transform: uppercase; margin-bottom: 6px; position: relative;
+}
+.b-b-badge {
+  background: #c9a227; color: #0b1f3a;
+  font-family: 'Oswald', sans-serif; font-size: 10px; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase; padding: 4px 10px;
+  margin-bottom: 12px; position: relative; display: inline-block;
+}
+.b-b p {
+  font-family: 'Oswald', sans-serif; font-size: 11px;
+  color: rgba(255,255,255,.5); margin-bottom: 14px; position: relative;
+}
+.b-b-btn {
+  background: #c9a227; color: #0b1f3a;
+  font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase; padding: 8px 18px;
+  border: none; cursor: pointer; position: relative;
+}
+
+/* Banner placeholder */
+.b-empty {
+  background: repeating-linear-gradient(45deg, #f0ece3, #f0ece3 6px, #e8e3d8 6px, #e8e3d8 12px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 32px 16px;
+}
+.b-empty span {
+  font-family: 'Oswald', sans-serif; font-size: 10.5px;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--mid); display: block; margin-bottom: 4px;
+}
+.b-empty strong { font-family: 'Oswald', sans-serif; font-size: 13px; color: var(--ink); }
+
+/* ─── ARTICLES ─── */
+.feed {
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+}
+.feed-header {
+  padding: 14px 28px;
+  border-bottom: 3px double var(--ink);
+  background: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.feed-section {
+  font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 700;
+  letter-spacing: .22em; text-transform: uppercase; color: white;
+}
+.feed-header::before {
+  content: '';
+  display: inline-block;
+  width: 10px; height: 10px;
+  background: var(--accent);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+article {
+  padding: 26px 28px 22px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  animation: up .4s ease both;
+}
+article:nth-child(2) { animation-delay: .06s; }
+article:nth-child(3) { animation-delay: .12s; }
+article:nth-child(4) { animation-delay: .18s; }
+article:nth-child(5) { animation-delay: .24s; }
+article:last-child   { border-bottom: none; }
+
+@keyframes up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.article-top {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 18px;
+}
+.tag {
+  font-family: 'Oswald', sans-serif; font-size: 9.5px; font-weight: 700;
+  letter-spacing: .16em; text-transform: uppercase;
+  padding: 3px 8px; background: var(--ink); color: var(--white);
+}
+.tag.local    { background: var(--accent); }
+.tag.nacional { background: #1a3a5c; }
+.tag.gremial  { background: #1e5c2a; }
+
+.article-date {
+  font-family: 'Oswald', sans-serif; font-size: 11px;
+  letter-spacing: .06em; color: var(--mid);
+}
+
+article h2 {
+  font-family: 'Libre Baskerville', serif; font-size: clamp(22px, 2.5vw, 25px);
+  font-weight: 700; line-height: 1.25; margin-bottom: 11px; letter-spacing: -.01em;
+}
+article h2 a { color: var(--ink); text-decoration: none; }
+article h2 a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 4px;
+}
+
+article p {
+  font-size: 15px; color: #3a3732; line-height: 1.75;
+  margin-bottom: 15px; font-family: 'Lora', serif;
+}
+
+.read-more {
+  font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 600;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--accent); text-decoration: none;
+  display: inline-flex; align-items: center; gap: 6px; transition: gap .2s;
+}
+.read-more::after { content: '→'; }
+.read-more:hover { gap: 10px; }
+
+/* Lead article */
+article.lead h2 { font-size: clamp(20px, 2.5vw, 26px); }
+article.lead::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 3px; background: var(--accent);
+}
+
+/* ─── FOOTER ─── */
+footer {
+  border-top: 3px double var(--ink);
+  background: var(--ink);
+  padding: 18px 24px;
+  text-align: center;
+}
+footer p {
+  font-family: 'Oswald', sans-serif; font-size: 11px;
+  letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.35);
+}
+footer strong { color: rgba(255,255,255,.6); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 960px) {
+  .page { grid-template-columns: 0 1fr 180px; padding: 20px 12px; }
+  .banner-col:first-child { display: none; }
+}
+@media (max-width: 640px) {
+  .page { grid-template-columns: 1fr; }
+  .banner-col { display: none; }
+  .feed { border: none; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-date" id="header-date">—</div>
+  <div class="masthead">Panorama <em>Litoral</em></div>
+  <div class="header-rule"></div>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <a th:href="@{/paginaPrincipal}">Página Principal</a>
+    <a th:href="@{/seccion/locales}">Locales</a>
+    <a th:href="@{/seccion/nacionales}">Nacionales</a>
+    <a th:href="@{/seccion/gremial}">Gremial</a>
+    <a th:href="@{/seccion/policiales}">Policiales</a>
+    <a th:href="@{/seccion/politica}">Política</a>
+    <a th:href="@{/seccion/economia}">Economía</a>
+    <a th:href="@{/seccion/deportes}">Deportes</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- LEFT BANNER ---- ASÍ HAY QUE HACER EL OTRO TAMBIÉN --> 
+<aside class="banner-col">
+    <a class="banner-slot" href="https://www.argentina.gob.ar" target="_blank">
+      <div class="banner-label">Publicidad</div>
+      <img src="https://dummyimage.com/300x250/1a4d8c/ffffff&text=Publicidad"
+          style="width:100%"
+          alt="Publicidad">
+    </a>
+</aside>
+
+  <!-- FEED -->
+  <main class="feed">
+    <div class="feed-header">
+      <div class="feed-section">Noticias recientes</div>
+    </div>
+
+    <article th:each="noticia : ${noticias}">
+
+      <div class="article-top">
+        <span class="tag" 
+          th:text="${noticia.tipo}"
+          th:style="${#strings.toUpperCase(noticia.tipo) == 'LOCALES'    ? 'background:#b5251b' :
+                    #strings.toUpperCase(noticia.tipo) == 'NACIONALES'  ? 'background:#1a3a5c' :
+                    #strings.toUpperCase(noticia.tipo) == 'GREMIAL'     ? 'background:#1e5c2a' :
+                    #strings.toUpperCase(noticia.tipo) == 'POLICIALES'  ? 'background:#1e3a4a' :
+                    #strings.toUpperCase(noticia.tipo) == 'POLITICA'    ? 'background:#6b1f3a' :
+                    #strings.toUpperCase(noticia.tipo) == 'ECONOMIA'    ? 'background:#1a4a3a' :
+                    #strings.toUpperCase(noticia.tipo) == 'DEPORTES'    ? 'background:#1a4d8c' :
+                                                                          'background:#1a1712'}">
+        </span>
+        <span class="article-date" 
+          th:text="${#temporals.format(noticia.fechaPublicacion, 'dd/MM/yyyy')}">
+        </span>
+      </div>
+
+      <!-- Imagen opcional -->
+      <img th:if="${noticia.imagen != null and !#strings.isEmpty(noticia.imagen)}"
+          th:src="${noticia.imagen}"
+          th:alt="${noticia.epigrafe != null ? noticia.epigrafe : noticia.titulo}"
+          style="width:100%; max-height:220px; object-fit:cover; display:block;
+                  margin-bottom:14px; border:1px solid var(--border);">
+      <h2>
+        <a th:href="@{/noticia/{id}(id=${noticia.id})}" th:text="${noticia.titulo}"></a>
+      </h2>
+
+      <p th:if="${noticia.bajada != null and !#strings.isEmpty(noticia.bajada)}"
+        th:text="${noticia.bajada}"></p>
+
+      <a th:href="@{/noticia/{id}(id=${noticia.id})}" class="read-more">Leer la nota completa</a>
+
+    </article>
+  </main>
+
+  <!-- RIGHT BANNER -->
+  <aside class="banner-col">
+    <a class="banner-slot" href="#">
+      <div class="banner-label">Publicidad</div>
+      <div class="banner-body b-b">
+        <div class="b-b-fish">🎣</div>
+        <div class="b-b-badge">Semana Santa</div>
+        <h3>Para pescar<br>en Entre Ríos</h3>
+        <p>Paquetes completos<br>18–20 Abril 2026</p>
+        <button class="b-b-btn">Reservar</button>
+      </div>
+    </a>
+    <a class="banner-slot" href="#">
+      <div class="banner-label">Publicidad</div>
+      <div class="b-empty">
+        <span>Tu publicidad</span>
+        <strong>aquí</strong>
+      </div>
+    </a>
+  </aside>
+
+</div>
+
+<footer>
+  <p><strong>Panorama Litoral</strong> · Paraná, Entre Ríos · © 2026</p>
+</footer>
+
+<script>
+  const d = new Date();
+  const dias  = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  document.getElementById('header-date').textContent =
+    `${dias[d.getDay()]} ${d.getDate()} de ${meses[d.getMonth()]} de ${d.getFullYear()} · Paraná, Entre Ríos`;
+</script>
+
+</body>
+</html>

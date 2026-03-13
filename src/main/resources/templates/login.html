@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panorama Litoral — Acceso</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f7f4ed;
+  --ink: #1a1712;
+  --mid: #5a5650;
+  --accent: #b5251b;
+  --border: #c8c3b8;
+  --white: #ffffff;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Libre Baskerville', Georgia, serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── HEADER ─── */
+header {
+  background: var(--white);
+  border-bottom: 3px double var(--ink);
+  text-align: center;
+  padding: 22px 24px 16px;
+}
+.header-date {
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 10px;
+}
+.masthead {
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(36px, 6vw, 64px);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink);
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-block;
+}
+.masthead em { font-style: normal; color: var(--accent); }
+.header-rule { width: 100%; height: 1px; background: var(--border); margin-top: 14px; }
+
+/* ─── MAIN ─── */
+main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+}
+
+.login-card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  width: 100%;
+  max-width: 400px;
+  animation: up .4s ease both;
+}
+
+@keyframes up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.login-header {
+  background: var(--ink);
+  padding: 20px 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.login-header-icon {
+  font-size: 18px;
+  color: rgba(255,255,255,.5);
+}
+.login-header-text {
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.7);
+}
+
+.login-body { padding: 32px 28px; }
+
+.field { margin-bottom: 22px; }
+.field label {
+  display: block;
+  font-family: 'Oswald', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 7px;
+}
+.field input {
+  width: 100%;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  padding: 11px 14px;
+  font-family: 'Libre Baskerville', serif;
+  font-size: 14px;
+  color: var(--ink);
+  outline: none;
+  transition: border-color .15s;
+}
+.field input:focus {
+  border-color: var(--ink);
+  background: var(--white);
+}
+.field input::placeholder { color: var(--border); }
+
+.login-error {
+  display: none;
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  letter-spacing: .08em;
+  color: var(--accent);
+  margin-bottom: 18px;
+  padding: 10px 14px;
+  border: 1px solid var(--accent);
+  background: rgba(181,37,27,.05);
+}
+.login-error.visible { display: block; }
+
+.login-btn {
+  width: 100%;
+  background: var(--ink);
+  color: white;
+  border: none;
+  padding: 13px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background .15s;
+  margin-top: 4px;
+}
+.login-btn:hover { background: var(--accent); }
+
+/* ─── FOOTER ─── */
+footer {
+  border-top: 3px double var(--ink);
+  background: var(--ink);
+  padding: 16px 24px;
+  text-align: center;
+}
+footer p {
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.35);
+}
+footer strong { color: rgba(255,255,255,.6); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-date" id="header-date">—</div>
+  <a href="paginaPrincipal.html" class="masthead">Panorama <em>Litoral</em></a>
+  <div class="header-rule"></div>
+</header>
+
+<main>
+  <div class="login-card">
+    <div class="login-header">
+      <div class="login-header-text">Acceso al panel editorial</div>
+    </div>
+    
+    <form class="login-body" th:action="@{/login}" method="POST">
+      
+      <div class="field">
+        <label for="usuario">Usuario</label>
+        <input type="text" id="usuario" name="usuario" autocomplete="username" required>
+      </div>
+      
+      <div class="field">
+        <label for="password">Contraseña</label>
+        <input type="password" id="password" name="password" autocomplete="current-password" required>
+      </div>
+      
+      <button type="submit" class="login-btn">Ingresar →</button>
+      
+    </form>
+  </div>
+</main>
+
+<footer>
+  <p><strong>Panorama Litoral</strong> · Paraná, Entre Ríos · © 2026</p>
+</footer>
+
+<script th:inline="javascript">
+  
+  /* 1. Al cargar la página, verificamos si venimos de un error de login */
+  window.onload = function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('error')) {
+          alert("Acceso denegado: el usuario o la contraseña no son válidos.");
+      }
+  };
+
+  /* 2. Validación local antes de intentar el envío */
+  function validarAntesDeEnviar(event) {
+    const user = document.getElementById('usuario').value.trim();
+    const pass = document.getElementById('password').value.trim();
+
+    if (user === "" || pass === "") {
+        alert("Por favor, completa todos los campos.");
+        return false; 
+    }
+    return true;
+  }
+
+  /* 3. Lógica de la fecha */
+  const d = new Date();
+  const dias = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  document.getElementById('header-date').textContent =
+    `${dias[d.getDay()]} ${d.getDate()} de ${meses[d.getMonth()]} de ${d.getFullYear()} · Paraná, Entre Ríos`;
+</script>
+
+</body>
+</html>

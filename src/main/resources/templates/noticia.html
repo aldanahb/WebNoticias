@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title th:text="'Panorama Litoral — ' + ${noticia.titulo}">Panorama Litoral</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Oswald:wght@400;600;700&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #f7f4ed; --ink: #1a1712; --mid: #5a5650; --accent: #b5251b;
+  --border: #c8c3b8; --white: #ffffff;
+}
+body { background: var(--bg); color: var(--ink); font-family: 'Libre Baskerville', Georgia, serif; font-size: 16px; line-height: 1.7; }
+header { background: var(--white); border-bottom: 3px double var(--ink); text-align: center; padding: 22px 24px 16px; }
+.header-date { font-family: 'Oswald', sans-serif; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--mid); margin-bottom: 10px; }
+.masthead { font-family: 'Oswald', sans-serif; font-size: clamp(36px, 6vw, 64px); font-weight: 700; line-height: 1; color: var(--ink); text-transform: uppercase; text-decoration: none; display: inline-block; }
+.masthead em { font-style: normal; color: var(--accent); }
+.header-rule { width: 100%; height: 1px; background: var(--border); margin-top: 14px; }
+nav { background: var(--ink); position: sticky; top: 0; z-index: 50; }
+.nav-inner { max-width: 1200px; margin: 0 auto; display: flex; overflow-x: auto; scrollbar-width: none; }
+.nav-inner::-webkit-scrollbar { display: none; }
+nav a { font-family: 'Oswald', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.65); text-decoration: none; padding: 13px 22px; border-right: 1px solid rgba(255,255,255,.08); white-space: nowrap; transition: color .15s, background .15s; }
+nav a:hover { color: #fff; background: rgba(255,255,255,.07); }
+nav a.active { color: #fff; border-bottom: 3px solid var(--accent); }
+.breadcrumb { max-width: 1200px; margin: 0 auto; padding: 12px 24px; display: flex; align-items: center; gap: 8px; font-family: 'Oswald', sans-serif; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--mid); }
+.breadcrumb a { color: var(--mid); text-decoration: none; }
+.breadcrumb a:hover { color: var(--ink); }
+.breadcrumb-sep { color: var(--border); }
+.breadcrumb-current { color: var(--ink); }
+.page {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 200px 1fr 200px;
+  gap: 0;
+  align-items: start;
+  padding: 0 24px 60px;
+}
+.banner-col { padding: 28px 20px 0; position: sticky; top: 52px; display: flex; flex-direction: column; gap: 20px; }
+.banner-slot { border: 1.5px solid var(--border); background: var(--white); display: block; text-decoration: none; overflow: hidden; transition: border-color .2s, box-shadow .2s; }
+.banner-slot:hover { border-color: var(--ink); box-shadow: 3px 3px 0 var(--ink); }
+.banner-label { font-family: 'Oswald', sans-serif; font-size: 9px; letter-spacing: .15em; text-transform: uppercase; color: var(--mid); padding: 5px 8px; border-bottom: 1px solid var(--border); text-align: right; }
+.banner-body { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px 16px; text-align: center; position: relative; overflow: hidden; }
+.b-a { background: #0d2b1a; }
+.b-a::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 60% 20%, rgba(50,160,80,.18), transparent 70%); }
+.b-a-mark { width: 44px; height: 44px; border-radius: 8px; background: #2ecc71; display: flex; align-items: center; justify-content: center; font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700; color: #0d2b1a; margin-bottom: 14px; position: relative; }
+.b-a h3 { font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700; color: #fff; line-height: 1.15; margin-bottom: 8px; text-transform: uppercase; position: relative; }
+.b-a p { font-family: 'Oswald', sans-serif; font-size: 11.5px; color: rgba(255,255,255,.55); margin-bottom: 16px; line-height: 1.5; position: relative; }
+.b-a-btn { background: #2ecc71; color: #0d2b1a; font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 8px 18px; border: none; cursor: pointer; position: relative; }
+.b-b { background: #0b1f3a; }
+.b-b-fish { font-size: 34px; margin-bottom: 10px; position: relative; }
+.b-b h3 { font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: 700; color: #fff; line-height: 1.2; text-transform: uppercase; margin-bottom: 6px; position: relative; }
+.b-b-badge { background: #c9a227; color: #0b1f3a; font-family: 'Oswald', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 4px 10px; margin-bottom: 12px; position: relative; display: inline-block; }
+.b-b p { font-family: 'Oswald', sans-serif; font-size: 11px; color: rgba(255,255,255,.5); margin-bottom: 14px; position: relative; }
+.b-b-btn { background: #c9a227; color: #0b1f3a; font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 8px 18px; border: none; cursor: pointer; position: relative; }
+.b-empty { background: repeating-linear-gradient(45deg, #f0ece3, #f0ece3 6px, #e8e3d8 6px, #e8e3d8 12px); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 32px 16px; }
+.b-empty span { font-family: 'Oswald', sans-serif; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--mid); display: block; margin-bottom: 4px; }
+.b-empty strong { font-family: 'Oswald', sans-serif; font-size: 13px; color: var(--ink); }
+.article-wrap { border-left: 1px solid var(--border); border-right: 1px solid var(--border); padding: 36px 36px 48px; animation: up .4s ease both; }
+@keyframes up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.art-volanta {
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.art-volanta::before {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  height: 2px;
+  background: var(--mid);
+  flex-shrink: 0;
+}
+.art-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+.art-tag { font-family: 'Oswald', sans-serif; font-size: 9.5px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; padding: 3px 9px; color: white; }
+.art-date { font-family: 'Oswald', sans-serif; font-size: 11px; letter-spacing: .08em; color: var(--mid); }
+.art-titular { font-family: 'Libre Baskerville', serif; font-size: clamp(24px, 3.5vw, 35px); font-weight: 700; line-height: 1.15; letter-spacing: -.02em; color: var(--ink); margin-bottom: 20px; border-top: 3px solid var(--accent); padding-top: 18px; }
+.art-bajada { font-family: 'Libre Baskerville', serif; font-size: 17px; font-style: italic; line-height: 1.6; color: var(--mid); border-left: 3px solid var(--border); padding-left: 18px; margin-bottom: 28px; }
+.art-imagen { margin-bottom: 8px; border: 1px solid var(--border); overflow: hidden; }
+.art-imagen img { width: 100%; display: block; max-height: 420px; object-fit: cover; }
+.art-epigrafe { font-family: 'Oswald', sans-serif; font-size: 12px; letter-spacing: .07em; color: var(--mid); padding: 7px 10px; background: #f0ece3; border: 1px solid var(--border); border-top: none; margin-bottom: 28px; }
+.art-rule { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.art-rule-line { flex: 1; height: 1px; background: var(--border); }
+.art-rule-diamond { width: 7px; height: 7px; background: var(--accent); transform: rotate(45deg); flex-shrink: 0; }
+.art-copete { font-family: 'Lora', serif; font-size: 16px; line-height: 1.8; color: var(--ink); margin-bottom: 20px; font-style: italic; }
+.art-cuerpo { font-family: 'Lora', serif; font-size: 15.5px; line-height: 1.85; color: #2e2b25; }
+.art-cuerpo p { margin-bottom: 20px; }
+.art-cuerpo p:last-child { margin-bottom: 0; }
+.art-share { margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.art-share-label { font-family: 'Oswald', sans-serif; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--mid); margin-right: 4px; }
+.share-btn { font-family: 'Oswald', sans-serif; font-size: 10.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; padding: 7px 14px; border: 1.5px solid var(--border); background: none; color: var(--mid); cursor: pointer; transition: all .15s; }
+.share-btn:hover { border-color: var(--ink); color: var(--ink); }
+.back-btn { margin-left: auto; font-family: 'Oswald', sans-serif; font-size: 10.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: gap .15s; }
+.back-btn:hover { gap: 10px; }
+footer { border-top: 3px double var(--ink); background: var(--ink); padding: 18px 24px; text-align: center; }
+footer p { font-family: 'Oswald', sans-serif; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.35); }
+footer strong { color: rgba(255,255,255,.6); }
+@media (max-width: 960px) { .page { grid-template-columns: 0 1fr 180px; padding: 0 12px 40px; } .banner-col:first-child { display: none; } }
+@media (max-width: 640px) { .page { grid-template-columns: 1fr; } .banner-col { display: none; } .article-wrap { border: none; padding: 24px 16px 40px; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-date" id="header-date">—</div>
+  <a th:href="@{/}" class="masthead">Panorama <em>Litoral</em></a>
+  <div class="header-rule"></div>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <a th:href="@{/paginaPrincipal}">Página principal</a>
+    <a th:href="@{/seccion/locales}"    th:classappend="${noticia.tipo == 'Locales'}    ? ' active' : ''">Locales</a>
+    <a th:href="@{/seccion/nacionales}" th:classappend="${noticia.tipo == 'Nacionales'} ? ' active' : ''">Nacionales</a>
+    <a th:href="@{/seccion/gremial}"    th:classappend="${noticia.tipo == 'Gremial'}    ? ' active' : ''">Gremial</a>
+    <a th:href="@{/seccion/policiales}" th:classappend="${noticia.tipo == 'Policiales'} ? ' active' : ''">Policiales</a>
+    <a th:href="@{/seccion/politica}"   th:classappend="${noticia.tipo == 'Política'}   ? ' active' : ''">Política</a>
+    <a th:href="@{/seccion/economia}"   th:classappend="${noticia.tipo == 'Economía'}   ? ' active' : ''">Economía</a>
+    <a th:href="@{/seccion/deportes}"   th:classappend="${noticia.tipo == 'Deportes'}   ? ' active' : ''">Deportes</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <aside class="banner-col">
+    <a class="banner-slot" href="#">
+      <div class="banner-label">Publicidad</div>
+      <div class="banner-body b-a">
+        <div class="b-a-mark">mi</div>
+        <h3>Está en<br>tus manos</h3>
+        <p>La app oficial de<br>trámites de Entre Ríos</p>
+        <button class="b-a-btn">Descargá</button>
+      </div>
+    </a>
+    <a class="banner-slot" href="#">
+      <div class="banner-label">Publicidad</div>
+      <div class="b-empty"><span>Tu publicidad</span><strong>aquí</strong></div>
+    </a>
+  </aside>
+
+  <main class="article-wrap">
+
+    <div class="art-volanta"
+         th:if="${noticia.volanta != null and !#strings.isEmpty(noticia.volanta)}"
+         th:text="${noticia.volanta}"></div>
+
+    <div class="art-meta">
+      <span class="art-tag"
+        th:text="${noticia.tipo}"
+        th:style="${#strings.toUpperCase(noticia.tipo) == 'LOCALES'    ? 'background:#b5251b' :
+                   #strings.toUpperCase(noticia.tipo) == 'NACIONALES'  ? 'background:#1a3a5c' :
+                   #strings.toUpperCase(noticia.tipo) == 'GREMIAL'     ? 'background:#1e5c2a' :
+                   #strings.toUpperCase(noticia.tipo) == 'POLICIALES'  ? 'background:#1e3a4a' :
+                   #strings.toUpperCase(noticia.tipo) == 'POLITICA'    ? 'background:#6b1f3a' :
+                   #strings.toUpperCase(noticia.tipo) == 'ECONOMIA'    ? 'background:#1a4a3a' :
+                   #strings.toUpperCase(noticia.tipo) == 'DEPORTES'    ? 'background:#1a4d8c' :
+                                                                         'background:#1a1712'}">
+      </span>
+      <span class="art-date"
+        th:text="${#temporals.format(noticia.fechaPublicacion, 'd ''de'' MMMM ''de'' yyyy')}">
+      </span>
+    </div>
+
+    <h1 class="art-titular" th:text="${noticia.titulo}"></h1>
+
+    <div class="art-bajada"
+         th:if="${noticia.bajada != null and !#strings.isEmpty(noticia.bajada)}"
+         th:text="${noticia.bajada}"></div>
+
+    <div class="art-imagen"
+         th:if="${noticia.imagen != null and !#strings.isEmpty(noticia.imagen)}">
+      <img th:src="${noticia.imagen}" th:alt="${noticia.epigrafe ?: noticia.titulo}">
+    </div>
+    <div class="art-epigrafe"
+         th:if="${noticia.imagen != null and !#strings.isEmpty(noticia.imagen) and noticia.epigrafe != null and !#strings.isEmpty(noticia.epigrafe)}"
+         th:text="${noticia.epigrafe}"></div>
+
+    <div class="art-rule">
+      <div class="art-rule-line"></div>
+      <div class="art-rule-diamond"></div>
+      <div class="art-rule-line"></div>
+    </div>
+
+    <p class="art-copete"
+       th:if="${noticia.copete != null and !#strings.isEmpty(noticia.copete)}"
+       th:text="${noticia.copete}"></p>
+
+    <div class="art-cuerpo" th:if="${noticia.cuerpo != null and !#strings.isEmpty(noticia.cuerpo)}">
+      <p th:each="parrafo : ${#strings.arraySplit(noticia.cuerpo, '
+
+')}"
+         th:if="${!#strings.isEmpty(#strings.trim(parrafo))}"
+         th:text="${#strings.trim(parrafo)}"></p>
+    </div>
+
+    <div class="art-share">
+      <span class="art-share-label">Compartir</span>
+      <button class="share-btn" onclick="compartir('whatsapp')">📱 WhatsApp</button>
+      <button class="share-btn" onclick="compartir('facebook')">Facebook</button>
+      <button class="share-btn" onclick="compartir('copiar')">⎘ Copiar enlace</button>
+      <a th:href="@{/paginaPrincipal}" class="back-btn">← Volver al inicio</a>
+    </div>
+
+  </main>
+
+  <aside class="banner-col">
+    <a class="banner-slot" href="#">
+      <div class="banner-label">Publicidad</div>
+      <div class="banner-body b-b">
+        <div class="b-b-fish">🎣</div>
+        <div class="b-b-badge">Semana Santa</div>
+        <h3>Para pescar<br>en Entre Ríos</h3>
+        <p>Paquetes completos<br>18–20 Abril 2026</p>
+        <button class="b-b-btn">Reservar</button>
+      </div>
+    </a>
+    <a class="banner-slot" href="#">
+      <div class="banner-label">Publicidad</div>
+      <div class="b-empty"><span>Tu publicidad</span><strong>aquí</strong></div>
+    </a>
+  </aside>
+
+</div>
+
+<footer>
+  <p><strong>Panorama Litoral</strong> · Paraná, Entre Ríos · © 2026</p>
+</footer>
+
+<script>
+  const d = new Date();
+  const dias  = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+  const meses = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+  document.getElementById("header-date").textContent =
+    dias[d.getDay()] + " " + d.getDate() + " de " + meses[d.getMonth()] + " de " + d.getFullYear() + " · Paraná, Entre Ríos";
+
+  function compartir(red) {
+    const url = encodeURIComponent(window.location.href);
+    const txt = encodeURIComponent(document.title);
+    if (red === "whatsapp") window.open("https://wa.me/?text=" + txt + "%20" + url);
+    if (red === "facebook") window.open("https://www.facebook.com/sharer/sharer.php?u=" + url);
+    if (red === "copiar") { navigator.clipboard.writeText(window.location.href); alert("Enlace copiado."); }
+  }
+</script>
+
+</body>
+</html>
