@@ -32,7 +32,7 @@ public class NoticiaController {
     @Value("${admin.password}")
     private String adminPassword;
 
-    @GetMapping("/paginaPrincipal")
+    @GetMapping("/")
     public String paginaPrincipal(Model model) {
 
         List<Noticia> noticias = noticiaService.obtenerTodasLasNoticias();

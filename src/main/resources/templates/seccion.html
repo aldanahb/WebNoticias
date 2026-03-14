@@ -75,13 +75,13 @@ footer strong { color: rgba(255,255,255,.6); }
 
 <header>
   <div class="header-date" id="header-date">—</div>
-  <a th:href="@{/paginaPrincipal}" class="masthead">Panorama <em>Litoral</em></a>
+  <a th:href="@{/}" class="masthead">Panorama <em>Litoral</em></a>
   <div class="header-rule"></div>
 </header>
 
 <nav>
   <div class="nav-inner">
-    <a th:href="@{/paginaPrincipal}">Página Principal</a>
+    <a th:href="@{/}">Página Principal</a>
     <a th:href="@{/seccion/locales}"    th:classappend="${#strings.toUpperCase(seccion) == 'LOCALES'}    ? ' active' : ''">Locales</a>
     <a th:href="@{/seccion/nacionales}" th:classappend="${#strings.toUpperCase(seccion) == 'NACIONALES'} ? ' active' : ''">Nacionales</a>
     <a th:href="@{/seccion/gremial}"    th:classappend="${#strings.toUpperCase(seccion) == 'GREMIAL'}    ? ' active' : ''">Gremial</a>

@@ -117,7 +117,7 @@ footer strong { color: rgba(255,255,255,.6); }
 
 <nav>
   <div class="nav-inner">
-    <a th:href="@{/paginaPrincipal}">Página principal</a>
+    <a th:href="@{/}">Página principal</a>
     <a th:href="@{/seccion/locales}"    th:classappend="${noticia.tipo == 'Locales'}    ? ' active' : ''">Locales</a>
     <a th:href="@{/seccion/nacionales}" th:classappend="${noticia.tipo == 'Nacionales'} ? ' active' : ''">Nacionales</a>
     <a th:href="@{/seccion/gremial}"    th:classappend="${noticia.tipo == 'Gremial'}    ? ' active' : ''">Gremial</a>
@@ -206,7 +206,7 @@ footer strong { color: rgba(255,255,255,.6); }
       <button class="share-btn" onclick="compartir('whatsapp')">📱 WhatsApp</button>
       <button class="share-btn" onclick="compartir('facebook')">Facebook</button>
       <button class="share-btn" onclick="compartir('copiar')">⎘ Copiar enlace</button>
-      <a th:href="@{/paginaPrincipal}" class="back-btn">← Volver al inicio</a>
+      <a th:href="@{/}" class="back-btn">← Volver al inicio</a>
     </div>
 
   </main>
