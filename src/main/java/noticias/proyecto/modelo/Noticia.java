@@ -16,7 +16,8 @@ public class Noticia {
     private String bajada;
     private String copete;
     private String cuerpo;
-    private String imagen; // nombre del archivo de la imagen. Esto lo trae del servidor (resources/static)
+    private String imagen;
+    private String imagenPublicId; // identificador que Cloudinary le asigna al subir
     private String epigrafe;
     @Column(name = "fecha_publicacion")
     private LocalDate fechaPublicacion;
@@ -97,6 +98,14 @@ public class Noticia {
         this.fechaPublicacion = fechaPublicacion;
     }
 
+    public String getImagenPublicId() {
+        return imagenPublicId;
+    }
+
+    public void setImagenPublicId(String imagenPublicId) {
+        this.imagenPublicId = imagenPublicId;
+    }
+    
     
 
 }

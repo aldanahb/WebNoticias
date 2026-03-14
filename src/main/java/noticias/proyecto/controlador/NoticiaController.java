@@ -1,12 +1,9 @@
 package noticias.proyecto.controlador;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.nio.file.Path;
 import java.util.List;
-import java.util.UUID;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -15,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.ui.Model;
 import noticias.proyecto.modelo.Noticia;
@@ -25,6 +24,9 @@ public class NoticiaController {
 
     @Autowired
     private NoticiaService noticiaService;
+
+    @Autowired
+    private Cloudinary cloudinary;
 
     @Value("${admin.user}")
     private String adminUser;
@@ -125,15 +127,21 @@ public class NoticiaController {
 
         if (imagen != null && !imagen.isEmpty()) {
             try {
-                String nombreArchivo = UUID.randomUUID() + "_" + imagen.getOriginalFilename();
-                Path ruta = Paths.get("src/main/resources/static/uploads/" + nombreArchivo);
-                Files.createDirectories(ruta.getParent());
-                Files.copy(imagen.getInputStream(), ruta);
-                noticia.setImagen("/uploads/" + nombreArchivo);
+                // Si ya tenía imagen, eliminarla de Cloudinary antes de subir la nueva
+                if (noticia.getImagenPublicId() != null) {
+                    cloudinary.uploader().destroy(noticia.getImagenPublicId(), ObjectUtils.emptyMap());
+                }
+                // Subir la nueva imagen
+                Map uploadResult = cloudinary.uploader().upload(
+                    imagen.getBytes(),
+                    ObjectUtils.asMap("folder", "panorama-litoral")
+                );
+                noticia.setImagen((String) uploadResult.get("secure_url"));
+                noticia.setImagenPublicId((String) uploadResult.get("public_id"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-    }
+        }
 
         noticiaService.guardarNoticia(noticia);
 
@@ -155,6 +163,17 @@ public class NoticiaController {
     public String eliminarNoticia(HttpSession session, @PathVariable Integer id) {
 
         if (session.getAttribute("usuarioLogueado") == null) return "redirect:/login";
+
+        Noticia noticiaEliminar = noticiaService.obtenerNoticia(id);
+
+        // Eliminar imagen de Cloudinary si existe
+        if (noticiaEliminar.getImagenPublicId() != null) {
+            try {
+                cloudinary.uploader().destroy(noticiaEliminar.getImagenPublicId(), ObjectUtils.emptyMap());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         noticiaService.eliminarNoticia(id);
 
