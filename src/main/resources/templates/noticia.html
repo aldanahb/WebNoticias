@@ -103,8 +103,28 @@ nav a.active { color: #fff; border-bottom: 3px solid var(--accent); }
 footer { border-top: 3px double var(--ink); background: var(--ink); padding: 18px 24px; text-align: center; }
 footer p { font-family: 'Oswald', sans-serif; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.35); }
 footer strong { color: rgba(255,255,255,.6); }
-@media (max-width: 960px) { .page { grid-template-columns: 0 1fr 180px; padding: 0 12px 40px; } .banner-col:first-child { display: none; } }
-@media (max-width: 640px) { .page { grid-template-columns: 1fr; } .banner-col { display: none; } .article-wrap { border: none; padding: 24px 16px 40px; } }
+
+@media (max-width: 1024px) {
+  .page { grid-template-columns: 160px 1fr; padding: 0 16px 40px; }
+  .banner-col:last-child { display: none; }
+  .banner-col { padding: 20px 12px 0; }
+}
+@media (max-width: 720px) {
+  .page { grid-template-columns: 1fr; padding: 0 0 40px; }
+  .banner-col { display: none; }
+  .article-wrap { border: none; padding: 24px 16px 40px; }
+}
+@media (max-width: 480px) {
+  header { padding: 16px 16px 12px; }
+  nav a { padding: 12px 12px; font-size: 11px; }
+  .art-titular { font-size: 21px; }
+  .art-bajada { font-size: 14px; padding-left: 12px; }
+  .art-copete { font-size: 14px; }
+  .art-cuerpo { font-size: 14.5px; }
+  .share-btn { padding: 6px 10px; font-size: 10px; }
+  .back-btn { margin-left: 0; width: 100%; margin-top: 8px; }
+}
+
 </style>
 </head>
 <body>

@@ -347,7 +347,23 @@ footer strong { color: rgba(255,255,255,.6); }
 @media (max-width: 700px) {
   .editor-layout { grid-template-columns: 1fr; }
   .form-sidebar { position: static; }
+  .editor-topbar-inner { flex-wrap: wrap; }
+  .editor-topbar-title { width: 100%; padding: 10px 0 6px; }
+  .topbar-actions { width: 100%; }
+  .topbar-btn { flex: 1; justify-content: center; }
+  .editor-layout { padding: 20px 16px 40px; gap: 20px; }
+  .form-section-body { padding: 16px; }
+  .seccion-grid { grid-template-columns: 1fr 1fr 1fr; }
 }
+@media (max-width: 480px) {
+  header { padding: 14px 16px 12px; }
+  .header-date { font-size: 10px; }
+  .masthead { font-size: clamp(26px, 8vw, 46px); }
+  .editor-layout { padding: 16px 12px 40px; }
+  .seccion-grid { grid-template-columns: 1fr 1fr; }
+  .field textarea.xtall { min-height: 180px; }
+}
+
 </style>
 </head>
 <body>
