@@ -8,7 +8,16 @@
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root { --bg: #f7f4ed; --ink: #1a1712; --mid: #5a5650; --accent: #b5251b; --border: #c8c3b8; --white: #ffffff; }
-body { background: var(--bg); color: var(--ink); font-family: 'Libre Baskerville', Georgia, serif; font-size: 16px; line-height: 1.7; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Libre Baskerville', Georgia, serif;
+  font-size: 16px;
+  line-height: 1.7;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
 header { background: var(--white); border-bottom: 3px double var(--ink); text-align: center; padding: 22px 24px 16px; }
 .header-date { font-family: 'Oswald', sans-serif; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--mid); margin-bottom: 10px; }
 .masthead { font-family: 'Oswald', sans-serif; font-size: clamp(42px, 7vw, 80px); font-weight: 700; line-height: 1; color: var(--ink); text-transform: uppercase; text-decoration: none; display: inline-block; }
@@ -24,8 +33,17 @@ nav a.active { color: #fff; border-bottom: 3px solid var(--accent); }
 .section-hero-inner { max-width: 1400px; margin: 0 auto; display: flex; align-items: flex-end; gap: 20px; flex-wrap: wrap; }
 .section-hero-name { font-family: 'Oswald', sans-serif; font-size: clamp(32px, 5vw, 52px); font-weight: 700; text-transform: uppercase; color: white; letter-spacing: -.01em; line-height: 1; }
 .section-hero-count { margin-left: auto; font-family: 'Oswald', sans-serif; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.5); padding-bottom: 6px; }
-.page { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 200px 1fr 200px; gap: 0; align-items: start; padding: 32px 24px; }
-.banner-col { padding: 0 20px; position: sticky; top: 52px; display: flex; flex-direction: column; gap: 20px; }
+.page {
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 200px 1fr 200px;
+  gap: 0;
+  align-items: start;
+  padding: 32px 24px;
+  flex: 1; /* <-- esto hace que el page estire y empuje el footer abajo */
+}
 .banner-slot { border: 1.5px solid var(--border); background: var(--white); display: block; text-decoration: none; overflow: hidden; transition: border-color .2s, box-shadow .2s; }
 .banner-slot:hover { border-color: var(--ink); box-shadow: 3px 3px 0 var(--ink); }
 .banner-label { font-family: 'Oswald', sans-serif; font-size: 9px; letter-spacing: .15em; text-transform: uppercase; color: var(--mid); padding: 5px 8px; border-bottom: 1px solid var(--border); text-align: right; }

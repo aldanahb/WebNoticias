@@ -38,14 +38,15 @@ nav a.active { color: #fff; border-bottom: 3px solid var(--accent); }
 .breadcrumb-sep { color: var(--border); }
 .breadcrumb-current { color: var(--ink); }
 .page {
-  width: 100%;
   max-width: 1400px;
+  width: 100%;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 200px 1fr 200px;
   gap: 0;
   align-items: start;
-  padding: 0 24px 60px;
+  padding: 32px 24px;
+  flex: 1; /* <-- esto hace que el page estire y empuje el footer abajo */
 }
 .banner-col { padding: 28px 20px 0; position: sticky; top: 52px; display: flex; flex-direction: column; gap: 20px; }
 .banner-slot { border: 1.5px solid var(--border); background: var(--white); display: block; text-decoration: none; overflow: hidden; transition: border-color .2s, box-shadow .2s; }
