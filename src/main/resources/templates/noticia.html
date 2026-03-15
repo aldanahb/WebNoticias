@@ -104,25 +104,58 @@ footer { border-top: 3px double var(--ink); background: var(--ink); padding: 18p
 footer p { font-family: 'Oswald', sans-serif; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.35); }
 footer strong { color: rgba(255,255,255,.6); }
 
-@media (max-width: 1024px) {
-  .page { grid-template-columns: 160px 1fr; padding: 0 16px 40px; }
-  .banner-col:last-child { display: none; }
-  .banner-col { padding: 20px 12px 0; }
+/* ─── RESPONSIVE ─── */
+@media (max-width: 1100px) {
+  .page { grid-template-columns: 140px 1fr 140px; padding: 24px 12px; }
+  .banner-col { padding: 0 8px; }
 }
-@media (max-width: 720px) {
-  .page { grid-template-columns: 1fr; padding: 0 0 40px; }
-  .banner-col { display: none; }
-  .article-wrap { border: none; padding: 24px 16px 40px; }
+@media (max-width: 800px) {
+  .page { grid-template-columns: 110px 1fr 110px; padding: 16px 8px; }
+  .banner-col { padding: 0 6px; }
+}
+@media (max-width: 600px) {
+  /* En móvil: feed arriba, banners abajo en fila */
+  .page {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    padding: 0;
+  }
+  .feed { border: none; grid-row: 1; }
+  article { padding: 20px 16px 18px; }
+  .feed-header { padding: 12px 16px; }
+
+  /* Los dos banners van abajo en fila horizontal */
+  .banner-col {
+    position: static;
+    flex-direction: row;
+    padding: 12px 16px;
+    gap: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .banner-col:first-child { display: flex; }
+  .banner-col:last-child  { display: flex; }
+  .banner-slot { flex: 1; }
+
+  /* Simplificar banners en móvil para que no sean altísimos */
+  .banner-body { padding: 16px 10px; }
+  .b-a h3, .b-b h3 { font-size: 14px; }
+  .b-a p, .b-b p   { display: none; }
+  .b-a-btn, .b-b-btn { padding: 6px 12px; }
+  .b-b-fish { font-size: 22px; margin-bottom: 6px; }
+  .b-b-badge { font-size: 9px; padding: 3px 7px; margin-bottom: 8px; }
+  .b-a-mark { width: 32px; height: 32px; font-size: 14px; margin-bottom: 8px; }
 }
 @media (max-width: 480px) {
-  header { padding: 16px 16px 12px; }
-  nav a { padding: 12px 12px; font-size: 11px; }
-  .art-titular { font-size: 21px; }
-  .art-bajada { font-size: 14px; padding-left: 12px; }
-  .art-copete { font-size: 14px; }
-  .art-cuerpo { font-size: 14.5px; }
-  .share-btn { padding: 6px 10px; font-size: 10px; }
-  .back-btn { margin-left: 0; width: 100%; margin-top: 8px; }
+  header { padding: 14px 16px 12px; }
+  .header-date { font-size: 10px; letter-spacing: .1em; }
+  nav a { padding: 11px 10px; font-size: 11px; }
+  article h2 { font-size: 19px; }
+  article p { font-size: 14px; }
+}
+@media (max-width: 360px) {
+  nav a { padding: 10px 8px; font-size: 10px; }
+  article h2 { font-size: 17px; }
+  article { padding: 16px 12px; }
 }
 
 </style>
