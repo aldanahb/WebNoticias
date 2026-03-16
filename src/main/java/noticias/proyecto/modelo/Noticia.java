@@ -11,14 +11,28 @@ public class Noticia {
     private Integer id;
 
     private String tipo;
+
+    @Column(length = 150)
     private String volanta;
+
+    @Column(length = 300)
     private String titulo;
+
+    @Column(length = 500)
     private String bajada;
+
+    @Column(columnDefinition = "TEXT")
     private String copete;
+
+    @Column(columnDefinition = "TEXT")
     private String cuerpo;
+    
     private String imagen;
     private String imagenPublicId; // identificador que Cloudinary le asigna al subir
+
+    @Column(length = 300)
     private String epigrafe;
+
     @Column(name = "fecha_publicacion")
     private LocalDate fechaPublicacion;
 
