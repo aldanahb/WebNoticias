@@ -630,9 +630,10 @@ footer strong { color: rgba(255,255,255,.6); }
 
   // Si hay imagen existente, mostrarla
   if (imagenActual) {
-    document.getElementById('preview-img').src = imagenActual;
-    document.getElementById('image-preview').style.display = 'block';
-    document.getElementById('image-drop').style.display = 'none';
+      document.getElementById('preview-img').src = imagenActual;
+      document.getElementById('image-preview').style.display = 'none'; // ocultar el preview original
+      document.getElementById('image-drop').style.display = 'none';
+      mostrarPosPreview(imagenActual);
   }
 
   // Inicializar contadores con valores precargados
