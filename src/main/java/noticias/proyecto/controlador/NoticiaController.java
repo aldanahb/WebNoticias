@@ -106,6 +106,7 @@ public class NoticiaController {
     @RequestParam("cuerpo") String cuerpo,
     @RequestParam("epigrafe") String epigrafe,
     @RequestParam("tipo") String tipo,
+    @RequestParam(value = "fechaPublicacion", required = false) String fechaStr,
     @RequestParam(value = "id", required = false) Integer id,
     @RequestParam(value = "imagen", required = false) MultipartFile imagen) {
 
@@ -114,6 +115,12 @@ public class NoticiaController {
         if(id != null) noticia = noticiaService.obtenerNoticia(id);
         else {
             noticia = new Noticia();
+            noticia.setFechaPublicacion(LocalDate.now());
+        }
+
+        if (fechaStr != null && !fechaStr.isEmpty()) {
+            noticia.setFechaPublicacion(LocalDate.parse(fechaStr));
+        } else if (id == null) {
             noticia.setFechaPublicacion(LocalDate.now());
         }
 

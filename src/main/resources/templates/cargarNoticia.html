@@ -200,6 +200,22 @@ header {
 .field textarea.tall { min-height: 160px; }
 .field textarea.xtall { min-height: 240px; }
 
+.field input[type="date"] {
+  width: 100%;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  padding: 10px 13px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px;
+  color: var(--ink);
+  outline: none;
+  transition: border-color .15s, background .15s;
+}
+.field input[type="date"]:focus {
+  border-color: var(--ink);
+  background: var(--white);
+}
+
 .char-count {
   font-family: 'Oswald', sans-serif;
   font-size: 10px;
@@ -503,6 +519,21 @@ footer strong { color: rgba(255,255,255,.6); }
               th:value="${noticia != null ? noticia.epigrafe : ''}"
               oninput="updateCounter(this,'cnt-epigrafe',200)">
             <div class="char-count" id="cnt-epigrafe">0 / 200</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. Fecha -->
+      <div class="form-section">
+        <div class="form-section-header">
+          <div class="form-section-num">7</div>
+          <div class="form-section-label">Fecha de publicación</div>
+          <div class="form-section-hint">Dejá vacío para usar la fecha de hoy</div>
+        </div>
+        <div class="form-section-body">
+          <div class="field">
+            <input type="date" id="fechaPublicacion" name="fechaPublicacion"
+                  th:value="${noticia != null and noticia.fechaPublicacion != null ? noticia.fechaPublicacion : ''}">
           </div>
         </div>
       </div>
