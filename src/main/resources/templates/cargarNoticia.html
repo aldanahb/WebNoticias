@@ -331,37 +331,6 @@ header {
   letter-spacing: .08em; text-transform: uppercase; color: var(--mid);
 }
 
-/* Posición de imagen */
-.pos-preview-wrap {
-  position: relative;
-  height: 180px;
-  overflow: hidden;
-  border: 1.5px solid var(--border);
-  cursor: grab;
-  background: var(--bg);
-  display: none;
-  margin-top: 14px;
-}
-.pos-preview-wrap:active { cursor: grabbing; }
-.pos-preview-wrap img {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  pointer-events: none;
-  user-select: none;
-}
-.pos-hint {
-  display: none;
-  font-family: 'Oswald', sans-serif;
-  font-size: 10px;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  color: var(--mid);
-  margin-top: 6px;
-  text-align: center;
-}
-
 /* ─── FOOTER ─── */
 footer {
   border-top: 3px double var(--ink);
@@ -501,29 +470,17 @@ footer strong { color: rgba(255,255,255,.6); }
           <div class="form-section-hint">JPG, PNG o WEBP</div>
         </div>
         <div class="form-section-body">
-
-          <!-- Si ya hay imagen, mostrar imagen actual -->
-          <div th:if="${noticia != null and noticia.imagen != null and !#strings.isEmpty(noticia.imagen)}"
-              style="margin-bottom:14px; font-family:'Oswald',sans-serif; font-size:10px;
-                      letter-spacing:.08em; text-transform:uppercase; color:var(--mid);">
-            Imagen actual — subí una nueva para reemplazarla
-          </div>
-
           <div class="image-drop" id="image-drop">
             <input type="file" id="imagen-input" name="imagen" accept="image/*"
               onchange="handleImageChange(this)">
             <span class="image-drop-icon">▦</span>
-            <div class="image-drop-text"
-                th:text="${noticia != null and noticia.imagen != null} ? 'Subir imagen nueva' : 'Hacé clic o arrastrá una imagen'">
-              Hacé clic o arrastrá una imagen
-            </div>
+            <div class="image-drop-text">Hacé clic o arrastrá una imagen</div>
             <div class="image-drop-sub">JPG · PNG · WEBP — máx. 5 MB</div>
           </div>
-
           <div class="image-preview" id="image-preview">
             <img id="preview-img" src="" alt="Preview">
+            <button type="button" class="image-preview-remove" onclick="removeImage()">✕</button>
           </div>
-
           <div class="field" style="margin-top:14px;">
             <label for="epigrafe">Epígrafe</label>
             <input type="text" id="epigrafe" name="epigrafe"
@@ -531,15 +488,6 @@ footer strong { color: rgba(255,255,255,.6); }
               oninput="updateCounter(this,'cnt-epigrafe',200)">
             <div class="char-count" id="cnt-epigrafe">0 / 200</div>
           </div>
-
-          <!-- Encuadre de imagen -->
-          <div class="pos-preview-wrap" id="pos-preview-wrap">
-            <img id="pos-preview-img" src="" alt="Encuadre">
-            <button type="button" class="image-preview-remove" onclick="removeImage()">✕</button>
-          </div>
-          <div class="pos-hint" id="pos-hint">↕ Arrastrá para reencuadrar</div>
-          <input type="hidden" id="imagen-posicion" name="imagenPosicion"
-                th:value="${noticia != null and noticia.imagenPosicion != null ? noticia.imagenPosicion : '50% 50%'}">
         </div>
       </div>
 
@@ -641,7 +589,7 @@ footer strong { color: rgba(255,255,255,.6); }
   document.getElementById('preview-tag').style.background = seccionActual.color;
   document.getElementById('preview-mini').style.borderColor = seccionActual.color;
 
-  // Si hay imagen existente, ocultar el drop (mostrarPosPreview se llama más abajo)
+  // Si hay imagen existente, ocultar el drop
   if (imagenActual) {
     document.getElementById('image-preview').style.display = 'none';
     document.getElementById('image-drop').style.display = 'none';
@@ -710,7 +658,8 @@ footer strong { color: rgba(255,255,255,.6); }
       document.getElementById(`st-${key}`).classList.toggle('ok', val.length > 0);
     });
     const tieneImagenNueva  = document.getElementById('imagen-input').files.length > 0;
-    const tieneImagenPrevia = posWrap.style.display === 'block';
+    const posW = document.getElementById('pos-preview-wrap');
+    const tieneImagenPrevia = posW && posW.style.display === 'block';
     document.getElementById('st-imagen').classList.toggle('ok', tieneImagenNueva || tieneImagenPrevia);
   }
 
@@ -738,7 +687,7 @@ footer strong { color: rgba(255,255,255,.6); }
     document.getElementById('imagen-posicion').value = `${Math.round(currentPos.x)}% ${Math.round(currentPos.y)}%`;
   }
 
-  // Llamar acá, después de definir la función
+  // Llamar después de definir la función
   if (imagenActual) mostrarPosPreview(imagenActual);
 
   posWrap.addEventListener('mousedown', e => {
