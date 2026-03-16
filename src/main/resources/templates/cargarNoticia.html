@@ -523,6 +523,7 @@ footer strong { color: rgba(255,255,255,.6); }
           <!-- Encuadre de imagen -->
           <div class="pos-preview-wrap" id="pos-preview-wrap">
             <img id="pos-preview-img" src="" alt="Encuadre">
+            <button type="button" class="image-preview-remove" onclick="removeImage()">✕</button>
           </div>
           <div class="pos-hint" id="pos-hint">↕ Arrastrá para reencuadrar</div>
           <input type="hidden" id="imagen-posicion" name="imagenPosicion"
@@ -628,12 +629,10 @@ footer strong { color: rgba(255,255,255,.6); }
   document.getElementById('preview-tag').style.background = seccionActual.color;
   document.getElementById('preview-mini').style.borderColor = seccionActual.color;
 
-  // Si hay imagen existente, mostrarla
+  // Si hay imagen existente, ocultar el drop (mostrarPosPreview se llama más abajo)
   if (imagenActual) {
-      document.getElementById('preview-img').src = imagenActual;
-      document.getElementById('image-preview').style.display = 'none'; // ocultar el preview original
-      document.getElementById('image-drop').style.display = 'none';
-      mostrarPosPreview(imagenActual);
+    document.getElementById('image-preview').style.display = 'none';
+    document.getElementById('image-drop').style.display = 'none';
   }
 
   // Inicializar contadores con valores precargados
@@ -699,7 +698,7 @@ footer strong { color: rgba(255,255,255,.6); }
       document.getElementById(`st-${key}`).classList.toggle('ok', val.length > 0);
     });
     const tieneImagenNueva  = document.getElementById('imagen-input').files.length > 0;
-    const tieneImagenPrevia = document.getElementById('preview-img').src && document.getElementById('preview-img').src !== window.location.href;
+    const tieneImagenPrevia = posWrap.style.display === 'block';
     document.getElementById('st-imagen').classList.toggle('ok', tieneImagenNueva || tieneImagenPrevia);
   }
 
@@ -727,6 +726,7 @@ footer strong { color: rgba(255,255,255,.6); }
     document.getElementById('imagen-posicion').value = `${Math.round(currentPos.x)}% ${Math.round(currentPos.y)}%`;
   }
 
+  // Llamar acá, después de definir la función
   if (imagenActual) mostrarPosPreview(imagenActual);
 
   posWrap.addEventListener('mousedown', e => {
@@ -760,8 +760,7 @@ footer strong { color: rgba(255,255,255,.6); }
     if (!input.files || !input.files[0]) return;
     const reader = new FileReader();
     reader.onload = e => {
-      document.getElementById('preview-img').src = e.target.result;
-      document.getElementById('image-preview').style.display = 'none'; // <-- ocultar en vez de mostrar
+      document.getElementById('image-preview').style.display = 'none';
       document.getElementById('image-drop').style.display = 'none';
       currentPos = { x: 50, y: 50 };
       mostrarPosPreview(e.target.result);
@@ -774,7 +773,6 @@ footer strong { color: rgba(255,255,255,.6); }
     document.getElementById('imagen-input').value = '';
     document.getElementById('image-preview').style.display = 'none';
     document.getElementById('image-drop').style.display = 'block';
-    document.getElementById('preview-img').src = '';
     posWrap.style.display = 'none';
     posHint.style.display = 'none';
     currentPos = { x: 50, y: 50 };
@@ -808,13 +806,10 @@ footer strong { color: rgba(255,255,255,.6); }
 
   function limpiarFormulario() {
     ['volanta','titular','bajada','copete','cuerpo','epigrafe','fechaPublicacion'].forEach(id => {
-      document.getElementById(id).value = '';
+      const el = document.getElementById(id);
+      if (el) el.value = '';
     });
     removeImage();
-    currentPos = { x: 50, y: 50 };
-    document.getElementById('imagen-posicion').value = '50% 50%';
-    posWrap.style.display = 'none';
-    posHint.style.display = 'none';
     [
       ['cnt-volanta', 80], ['cnt-titular', 120], ['cnt-bajada', 200],
       ['cnt-copete', 600], ['cnt-epigrafe', 200]
