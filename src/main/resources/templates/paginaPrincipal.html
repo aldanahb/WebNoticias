@@ -476,10 +476,10 @@ footer strong { color: rgba(255,255,255,.6); }
 
       <!-- Imagen opcional -->
       <img th:if="${noticia.imagen != null and !#strings.isEmpty(noticia.imagen)}"
-          th:src="${noticia.imagen}"
-          th:alt="${noticia.epigrafe != null ? noticia.epigrafe : noticia.titulo}"
-          style="width:100%; max-height:220px; object-fit:cover; display:block;
-                  margin-bottom:14px; border:1px solid var(--border);">
+        th:src="${noticia.imagen}"
+        th:style="'width:100%; max-height:220px; object-fit:cover; display:block; margin-bottom:14px; border:1px solid var(--border); object-position:' + ${noticia.imagenPosicion != null ? noticia.imagenPosicion : '50% 50%'}"
+        th:alt="${noticia.epigrafe != null ? noticia.epigrafe : noticia.titulo}">
+        
       <h2>
         <a th:href="@{/noticia/{id}(id=${noticia.id})}" th:text="${noticia.titulo}"></a>
       </h2>

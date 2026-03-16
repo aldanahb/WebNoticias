@@ -36,6 +36,8 @@ public class Noticia {
     @Column(name = "fecha_publicacion")
     private LocalDate fechaPublicacion;
 
+    private String imagenPosicion = "50% 50%";
+
     public Integer getId() {
         return id;
     }
@@ -119,7 +121,13 @@ public class Noticia {
     public void setImagenPublicId(String imagenPublicId) {
         this.imagenPublicId = imagenPublicId;
     }
-    
-    
+
+    public String getImagenPosicion() {
+        return imagenPosicion;
+    }
+
+    public void setImagenPosicion(String imagenPosicion) {
+        this.imagenPosicion = imagenPosicion;
+    }
 
 }

@@ -108,6 +108,7 @@ public class NoticiaController {
     @RequestParam("tipo") String tipo,
     @RequestParam(value = "fechaPublicacion", required = false) String fechaStr,
     @RequestParam(value = "id", required = false) Integer id,
+    @RequestParam(value = "imagenPosicion", required = false, defaultValue = "50% 50%") String imagenPosicion,
     @RequestParam(value = "imagen", required = false) MultipartFile imagen) {
 
         Noticia noticia;
@@ -145,6 +146,7 @@ public class NoticiaController {
                 );
                 noticia.setImagen((String) uploadResult.get("secure_url"));
                 noticia.setImagenPublicId((String) uploadResult.get("public_id"));
+                noticia.setImagenPosicion(imagenPosicion);
             } catch (IOException e) {
                 e.printStackTrace();
             }

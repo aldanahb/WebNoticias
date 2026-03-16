@@ -239,9 +239,10 @@ footer strong { color: rgba(255,255,255,.6); }
          th:if="${noticia.bajada != null and !#strings.isEmpty(noticia.bajada)}"
          th:text="${noticia.bajada}"></div>
 
-    <div class="art-imagen"
-         th:if="${noticia.imagen != null and !#strings.isEmpty(noticia.imagen)}">
-      <img th:src="${noticia.imagen}" th:alt="${noticia.epigrafe ?: noticia.titulo}">
+    <div class="art-imagen" th:if="${noticia.imagen != null and !#strings.isEmpty(noticia.imagen)}">
+      <img th:src="${noticia.imagen}"
+          th:style="'object-position:' + ${noticia.imagenPosicion != null ? noticia.imagenPosicion : '50% 50%'}"
+          th:alt="${noticia.epigrafe ?: noticia.titulo}">
     </div>
     <div class="art-epigrafe"
          th:if="${noticia.imagen != null and !#strings.isEmpty(noticia.imagen) and noticia.epigrafe != null and !#strings.isEmpty(noticia.epigrafe)}"

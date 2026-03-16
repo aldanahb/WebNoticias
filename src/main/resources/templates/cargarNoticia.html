@@ -200,22 +200,6 @@ header {
 .field textarea.tall { min-height: 160px; }
 .field textarea.xtall { min-height: 240px; }
 
-.field input[type="date"] {
-  width: 100%;
-  border: 1.5px solid var(--border);
-  background: var(--bg);
-  padding: 10px 13px;
-  font-family: 'Oswald', sans-serif;
-  font-size: 13px;
-  color: var(--ink);
-  outline: none;
-  transition: border-color .15s, background .15s;
-}
-.field input[type="date"]:focus {
-  border-color: var(--ink);
-  background: var(--white);
-}
-
 .char-count {
   font-family: 'Oswald', sans-serif;
   font-size: 10px;
@@ -347,6 +331,37 @@ header {
   letter-spacing: .08em; text-transform: uppercase; color: var(--mid);
 }
 
+/* Posición de imagen */
+.pos-preview-wrap {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+  border: 1.5px solid var(--border);
+  cursor: grab;
+  background: var(--bg);
+  display: none;
+  margin-top: 14px;
+}
+.pos-preview-wrap:active { cursor: grabbing; }
+.pos-preview-wrap img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+}
+.pos-hint {
+  display: none;
+  font-family: 'Oswald', sans-serif;
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-top: 6px;
+  text-align: center;
+}
+
 /* ─── FOOTER ─── */
 footer {
   border-top: 3px double var(--ink);
@@ -363,23 +378,7 @@ footer strong { color: rgba(255,255,255,.6); }
 @media (max-width: 700px) {
   .editor-layout { grid-template-columns: 1fr; }
   .form-sidebar { position: static; }
-  .editor-topbar-inner { flex-wrap: wrap; }
-  .editor-topbar-title { width: 100%; padding: 10px 0 6px; }
-  .topbar-actions { width: 100%; }
-  .topbar-btn { flex: 1; justify-content: center; }
-  .editor-layout { padding: 20px 16px 40px; gap: 20px; }
-  .form-section-body { padding: 16px; }
-  .seccion-grid { grid-template-columns: 1fr 1fr 1fr; }
 }
-@media (max-width: 480px) {
-  header { padding: 14px 16px 12px; }
-  .header-date { font-size: 10px; }
-  .masthead { font-size: clamp(26px, 8vw, 46px); }
-  .editor-layout { padding: 16px 12px 40px; }
-  .seccion-grid { grid-template-columns: 1fr 1fr; }
-  .field textarea.xtall { min-height: 180px; }
-}
-
 </style>
 </head>
 <body>
@@ -520,21 +519,14 @@ footer strong { color: rgba(255,255,255,.6); }
               oninput="updateCounter(this,'cnt-epigrafe',200)">
             <div class="char-count" id="cnt-epigrafe">0 / 200</div>
           </div>
-        </div>
-      </div>
 
-      <!-- 7. Fecha -->
-      <div class="form-section">
-        <div class="form-section-header">
-          <div class="form-section-num">7</div>
-          <div class="form-section-label">Fecha de publicación</div>
-          <div class="form-section-hint">Dejá vacío para usar la fecha de hoy</div>
-        </div>
-        <div class="form-section-body">
-          <div class="field">
-            <input type="date" id="fechaPublicacion" name="fechaPublicacion"
-                  th:value="${noticia != null and noticia.fechaPublicacion != null ? noticia.fechaPublicacion : ''}">
+          <!-- Encuadre de imagen -->
+          <div class="pos-preview-wrap" id="pos-preview-wrap">
+            <img id="pos-preview-img" src="" alt="Encuadre">
           </div>
+          <div class="pos-hint" id="pos-hint">↕ Arrastrá para reencuadrar</div>
+          <input type="hidden" id="imagen-posicion" name="imagenPosicion"
+                 th:value="${noticia != null and noticia.imagenPosicion != null ? noticia.imagenPosicion : '50% 50%'}">
         </div>
       </div>
 
@@ -710,13 +702,68 @@ footer strong { color: rgba(255,255,255,.6); }
     document.getElementById('st-imagen').classList.toggle('ok', tieneImagenNueva || tieneImagenPrevia);
   }
 
+  // ── Posición de imagen con arrastre ──
+  let isDragging = false;
+  let dragStart  = { x: 0, y: 0 };
+  let currentPos = { x: 50, y: 50 };
+
+  const posWrap = document.getElementById('pos-preview-wrap');
+  const posImg  = document.getElementById('pos-preview-img');
+  const posHint = document.getElementById('pos-hint');
+
+  const posActual = /*[[${noticia != null and noticia.imagenPosicion != null ? noticia.imagenPosicion : '50% 50%'}]]*/ '50% 50%';
+  const partes = posActual.split(' ');
+  if (partes.length === 2) {
+    currentPos.x = parseFloat(partes[0]);
+    currentPos.y = parseFloat(partes[1]);
+  }
+
+  function mostrarPosPreview(src) {
+    posImg.src = src;
+    posImg.style.objectPosition = `${currentPos.x}% ${currentPos.y}%`;
+    posWrap.style.display = 'block';
+    posHint.style.display = 'block';
+    document.getElementById('imagen-posicion').value = `${Math.round(currentPos.x)}% ${Math.round(currentPos.y)}%`;
+  }
+
+  if (imagenActual) mostrarPosPreview(imagenActual);
+
+  posWrap.addEventListener('mousedown', e => {
+    isDragging = true;
+    dragStart = { x: e.clientX, y: e.clientY };
+    e.preventDefault();
+  });
+  posWrap.addEventListener('touchstart', e => {
+    isDragging = true;
+    dragStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    e.preventDefault();
+  }, { passive: false });
+
+  function onMove(clientX, clientY) {
+    if (!isDragging) return;
+    const rect = posWrap.getBoundingClientRect();
+    const dx = ((clientX - dragStart.x) / rect.width)  * -100;
+    const dy = ((clientY - dragStart.y) / rect.height) * -100;
+    currentPos.x = Math.min(100, Math.max(0, currentPos.x + dx));
+    currentPos.y = Math.min(100, Math.max(0, currentPos.y + dy));
+    posImg.style.objectPosition = `${currentPos.x}% ${currentPos.y}%`;
+    document.getElementById('imagen-posicion').value = `${Math.round(currentPos.x)}% ${Math.round(currentPos.y)}%`;
+    dragStart = { x: clientX, y: clientY };
+  }
+  document.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
+  document.addEventListener('touchmove', e => onMove(e.touches[0].clientX, e.touches[0].clientY), { passive: false });
+  document.addEventListener('mouseup',  () => { isDragging = false; });
+  document.addEventListener('touchend', () => { isDragging = false; });
+
   function handleImageChange(input) {
     if (!input.files || !input.files[0]) return;
     const reader = new FileReader();
     reader.onload = e => {
       document.getElementById('preview-img').src = e.target.result;
-      document.getElementById('image-preview').style.display = 'block';
+      document.getElementById('image-preview').style.display = 'none'; // <-- ocultar en vez de mostrar
       document.getElementById('image-drop').style.display = 'none';
+      currentPos = { x: 50, y: 50 };
+      mostrarPosPreview(e.target.result);
     };
     reader.readAsDataURL(input.files[0]);
     updateStatus();
@@ -727,6 +774,10 @@ footer strong { color: rgba(255,255,255,.6); }
     document.getElementById('image-preview').style.display = 'none';
     document.getElementById('image-drop').style.display = 'block';
     document.getElementById('preview-img').src = '';
+    posWrap.style.display = 'none';
+    posHint.style.display = 'none';
+    currentPos = { x: 50, y: 50 };
+    document.getElementById('imagen-posicion').value = '50% 50%';
     updateStatus();
   }
 
@@ -759,6 +810,10 @@ footer strong { color: rgba(255,255,255,.6); }
       document.getElementById(id).value = '';
     });
     removeImage();
+    currentPos = { x: 50, y: 50 };
+    document.getElementById('imagen-posicion').value = '50% 50%';
+    posWrap.style.display = 'none';
+    posHint.style.display = 'none';
     [
       ['cnt-volanta', 80], ['cnt-titular', 120], ['cnt-bajada', 200],
       ['cnt-copete', 600], ['cnt-epigrafe', 200]
