@@ -156,6 +156,16 @@ footer strong { color: rgba(255,255,255,.6); }
   .b-b-badge { font-size: 9px; padding: 3px 7px; margin-bottom: 8px; }
   .b-a-mark { width: 32px; height: 32px; font-size: 14px; margin-bottom: 8px; }
 }
+
+.art-cuerpo b, .art-cuerpo strong { font-weight: 700; }
+.art-cuerpo u { text-decoration: underline; }
+.art-cuerpo em, .art-cuerpo i { font-style: italic; }
+.art-cuerpo .ql-size-small { font-size: 13px; }
+.art-cuerpo .ql-size-large { font-size: 18px; }
+.art-cuerpo .ql-size-huge  { font-size: 22px; }
+.art-cuerpo ol, .art-cuerpo ul { padding-left: 24px; margin-bottom: 16px; }
+.art-cuerpo li { margin-bottom: 6px; }
+
 @media (max-width: 480px) {
   header { padding: 14px 16px 12px; }
   .header-date { font-size: 10px; letter-spacing: .1em; }
@@ -258,14 +268,9 @@ footer strong { color: rgba(255,255,255,.6); }
        th:if="${noticia.copete != null and !#strings.isEmpty(noticia.copete)}"
        th:text="${noticia.copete}"></p>
 
-    <div class="art-cuerpo" th:if="${noticia.cuerpo != null and !#strings.isEmpty(noticia.cuerpo)}">
-      <p th:each="parrafo : ${#strings.arraySplit(noticia.cuerpo, '
-
-')}"
-         th:if="${!#strings.isEmpty(#strings.trim(parrafo))}"
-         th:text="${#strings.trim(parrafo)}"></p>
+    <div class="art-cuerpo" th:if="${noticia.cuerpo != null and !#strings.isEmpty(noticia.cuerpo)}"
+        th:utext="${noticia.cuerpo}">
     </div>
-
     <div class="art-share">
       <span class="art-share-label">Compartir</span>
       <button class="share-btn" onclick="compartir('whatsapp')">📱 WhatsApp</button>
