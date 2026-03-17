@@ -130,6 +130,7 @@ public class NoticiaController {
         noticia.setBajada(bajada);
         noticia.setCopete(copete);
         noticia.setCuerpo(cuerpo);
+        noticia.setImagenPosicion(imagenPosicion);
         noticia.setEpigrafe(epigrafe);
         noticia.setTipo(tipo);
 
@@ -146,7 +147,6 @@ public class NoticiaController {
                 );
                 noticia.setImagen((String) uploadResult.get("secure_url"));
                 noticia.setImagenPublicId((String) uploadResult.get("public_id"));
-                noticia.setImagenPosicion(imagenPosicion);
             } catch (IOException e) {
                 e.printStackTrace();
             }
