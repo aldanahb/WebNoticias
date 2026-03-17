@@ -331,37 +331,6 @@ header {
   letter-spacing: .08em; text-transform: uppercase; color: var(--mid);
 }
 
-/* Posición de imagen */
-.pos-preview-wrap {
-  position: relative;
-  height: 180px;
-  overflow: hidden;
-  border: 1.5px solid var(--border);
-  cursor: grab;
-  background: var(--bg);
-  display: none;
-  margin-top: 14px;
-}
-.pos-preview-wrap:active { cursor: grabbing; }
-.pos-preview-wrap img {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  pointer-events: none;
-  user-select: none;
-}
-.pos-hint {
-  display: none;
-  font-family: 'Oswald', sans-serif;
-  font-size: 10px;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  color: var(--mid);
-  margin-top: 6px;
-  text-align: center;
-}
-
 /* ─── FOOTER ─── */
 footer {
   border-top: 3px double var(--ink);
@@ -519,16 +488,21 @@ footer strong { color: rgba(255,255,255,.6); }
               oninput="updateCounter(this,'cnt-epigrafe',200)">
             <div class="char-count" id="cnt-epigrafe">0 / 200</div>
           </div>
+        </div>
+      </div>
 
-          <!-- Encuadre de imagen -->
-          <div class="pos-preview-wrap" id="pos-preview-wrap">
-            <img id="pos-preview-img" src="" alt="Encuadre">
-            <button type="button" class="image-preview-remove" onclick="removeImage()">✕</button>
+      <!-- 7. Fecha -->
+      <div class="form-section">
+        <div class="form-section-header">
+          <div class="form-section-num">7</div>
+          <div class="form-section-label">Fecha de publicación</div>
+          <div class="form-section-hint">Dejá vacío para usar la fecha de hoy</div>
+        </div>
+        <div class="form-section-body">
+          <div class="field">
+            <input type="date" id="fechaPublicacion" name="fechaPublicacion"
+                   th:value="${noticia != null and noticia.fechaPublicacion != null ? noticia.fechaPublicacion : ''}">
           </div>
-          <div class="pos-hint" id="pos-hint">↕ Arrastrá para reencuadrar</div>
-          <input type="hidden" id="imagen-posicion" name="imagenPosicion"
-                 th:value="${noticia != null and noticia.imagenPosicion != null ? noticia.imagenPosicion : '50% 50%'}">
-
         </div>
       </div>
 
@@ -630,10 +604,9 @@ footer strong { color: rgba(255,255,255,.6); }
   document.getElementById('preview-tag').style.background = seccionActual.color;
   document.getElementById('preview-mini').style.borderColor = seccionActual.color;
 
-  // Si hay imagen existente, mostrarla
+  // Si hay imagen existente, ocultar el drop
   if (imagenActual) {
-    document.getElementById('preview-img').src = imagenActual;
-    document.getElementById('image-preview').style.display = 'block';
+    document.getElementById('image-preview').style.display = 'none';
     document.getElementById('image-drop').style.display = 'none';
   }
 
@@ -700,17 +673,75 @@ footer strong { color: rgba(255,255,255,.6); }
       document.getElementById(`st-${key}`).classList.toggle('ok', val.length > 0);
     });
     const tieneImagenNueva  = document.getElementById('imagen-input').files.length > 0;
-    const tieneImagenPrevia = document.getElementById('preview-img').src && document.getElementById('preview-img').src !== window.location.href;
+    const posW = document.getElementById('pos-preview-wrap');
+    const tieneImagenPrevia = posW && posW.style.display === 'block';
     document.getElementById('st-imagen').classList.toggle('ok', tieneImagenNueva || tieneImagenPrevia);
   }
+
+  // ── Posición de imagen con arrastre ──
+  let isDragging = false;
+  let dragStart  = { x: 0, y: 0 };
+  let currentPos = { x: 50, y: 50 };
+
+  const posWrap = document.getElementById('pos-preview-wrap');
+  const posImg  = document.getElementById('pos-preview-img');
+  const posHint = document.getElementById('pos-hint');
+
+  const posActual = /*[[${noticia != null and noticia.imagenPosicion != null ? noticia.imagenPosicion : '50% 50%'}]]*/ '50% 50%';
+  const partes = posActual.split(' ');
+  if (partes.length === 2) {
+    currentPos.x = parseFloat(partes[0]);
+    currentPos.y = parseFloat(partes[1]);
+  }
+
+  function mostrarPosPreview(src) {
+    posImg.src = src;
+    posImg.style.objectPosition = `${currentPos.x}% ${currentPos.y}%`;
+    posWrap.style.display = 'block';
+    posHint.style.display = 'block';
+    document.getElementById('imagen-posicion').value = `${Math.round(currentPos.x)}% ${Math.round(currentPos.y)}%`;
+  }
+
+  // Mostrar imagen existente al editar
+  if (imagenActual) mostrarPosPreview(imagenActual);
+
+  posWrap.addEventListener('mousedown', e => {
+    isDragging = true;
+    dragStart = { x: e.clientX, y: e.clientY };
+    e.preventDefault();
+    e.stopPropagation();
+  });
+  posWrap.addEventListener('touchstart', e => {
+    isDragging = true;
+    dragStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    e.preventDefault();
+    e.stopPropagation();
+  }, { passive: false });
+
+  function onMove(clientX, clientY) {
+    if (!isDragging) return;
+    const rect = posWrap.getBoundingClientRect();
+    const dx = ((clientX - dragStart.x) / rect.width)  * -100;
+    const dy = ((clientY - dragStart.y) / rect.height) * -100;
+    currentPos.x = Math.min(100, Math.max(0, currentPos.x + dx));
+    currentPos.y = Math.min(100, Math.max(0, currentPos.y + dy));
+    posImg.style.objectPosition = `${currentPos.x}% ${currentPos.y}%`;
+    document.getElementById('imagen-posicion').value = `${Math.round(currentPos.x)}% ${Math.round(currentPos.y)}%`;
+    dragStart = { x: clientX, y: clientY };
+  }
+  document.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
+  document.addEventListener('touchmove', e => onMove(e.touches[0].clientX, e.touches[0].clientY), { passive: false });
+  document.addEventListener('mouseup',  () => { isDragging = false; });
+  document.addEventListener('touchend', () => { isDragging = false; });
 
   function handleImageChange(input) {
     if (!input.files || !input.files[0]) return;
     const reader = new FileReader();
     reader.onload = e => {
-      document.getElementById('preview-img').src = e.target.result;
-      document.getElementById('image-preview').style.display = 'block';
+      document.getElementById('image-preview').style.display = 'none';
       document.getElementById('image-drop').style.display = 'none';
+      currentPos = { x: 50, y: 50 };
+      mostrarPosPreview(e.target.result);
     };
     reader.readAsDataURL(input.files[0]);
     updateStatus();
@@ -720,7 +751,10 @@ footer strong { color: rgba(255,255,255,.6); }
     document.getElementById('imagen-input').value = '';
     document.getElementById('image-preview').style.display = 'none';
     document.getElementById('image-drop').style.display = 'block';
-    document.getElementById('preview-img').src = '';
+    posWrap.style.display = 'none';
+    posHint.style.display = 'none';
+    currentPos = { x: 50, y: 50 };
+    document.getElementById('imagen-posicion').value = '50% 50%';
     updateStatus();
   }
 
@@ -749,8 +783,9 @@ footer strong { color: rgba(255,255,255,.6); }
   }
 
   function limpiarFormulario() {
-    ['volanta','titular','bajada','copete','cuerpo','epigrafe'].forEach(id => {
-      document.getElementById(id).value = '';
+    ['volanta','titular','bajada','copete','cuerpo','epigrafe','fechaPublicacion'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
     });
     removeImage();
     [
