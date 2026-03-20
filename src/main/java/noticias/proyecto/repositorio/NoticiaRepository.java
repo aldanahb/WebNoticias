@@ -12,4 +12,5 @@ public interface NoticiaRepository extends CrudRepository<Noticia,Integer> {
     List<Noticia> findByTipoIgnoreCase(String tipo);
     List<Noticia> findById(int id);
     List<Noticia> findAllByOrderByFechaPublicacionDesc();
+    List<Noticia> findByTipoIgnoreCaseOrderByFechaPublicacionDesc(String tipo);
 }

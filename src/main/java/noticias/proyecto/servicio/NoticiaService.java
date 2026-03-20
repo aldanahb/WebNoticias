@@ -36,7 +36,7 @@ public class NoticiaService implements NoticiaServiceInterface {
         LocalDate fechaHoy = LocalDate.now();
 
         for (Noticia n : noticiaRepository.findAllByOrderByFechaPublicacionDesc()) {
-            
+
             LocalDate fechaNoticia = n.getFechaPublicacion().toLocalDate();
             
             if (fechaHoy.equals(fechaNoticia)) {
@@ -48,7 +48,7 @@ public class NoticiaService implements NoticiaServiceInterface {
     }
 
     public List<Noticia> obtenerNoticiasPorTipo(String tipo) {
-        return noticiaRepository.findByTipoIgnoreCase(tipo);
+        return noticiaRepository.findByTipoIgnoreCaseOrderByFechaPublicacionDesc(tipo);
     }
 
     public void eliminarNoticia(int id) {
