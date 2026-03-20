@@ -525,7 +525,7 @@ footer strong { color: rgba(255,255,255,.6); }
         <div class="form-section-body">
           <div class="field">
             <input type="date" id="fechaPublicacion" name="fechaPublicacion"
-                   th:value="${noticia != null and noticia.fechaPublicacion != null ? noticia.fechaPublicacion : ''}">
+              th:value="${noticia != null and noticia.fechaPublicacion != null ? #temporals.format(noticia.fechaPublicacion, 'yyyy-MM-dd') : ''}">
           </div>
         </div>
       </div>
