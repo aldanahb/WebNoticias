@@ -1,5 +1,7 @@
 package noticias.proyecto.modelo;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -34,7 +36,7 @@ public class Noticia {
     private String epigrafe;
 
     @Column(name = "fecha_publicacion")
-    private LocalDate fechaPublicacion;
+    private LocalDateTime fechaPublicacion;
 
     private String imagenPosicion = "50% 50%";
 
@@ -106,11 +108,11 @@ public class Noticia {
         this.epigrafe = epigrafe;
     }
 
-    public LocalDate getFechaPublicacion() {
+    public LocalDateTime getFechaPublicacion() {
         return fechaPublicacion;
     }
 
-    public void setFechaPublicacion(LocalDate fechaPublicacion) {
+    public void setFechaPublicacion(LocalDateTime fechaPublicacion) {
         this.fechaPublicacion = fechaPublicacion;
     }
 

@@ -1,8 +1,11 @@
 package noticias.proyecto.servicio;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import noticias.proyecto.modelo.Noticia;
@@ -23,6 +26,22 @@ public class NoticiaService implements NoticiaServiceInterface {
 
         for (Noticia n : noticiaRepository.findAllByOrderByFechaPublicacionDesc()) {
             noticias.add(n);
+        }
+
+        return noticias;
+    }
+
+    public List<Noticia> obtenerNoticiasDelDia() {
+        List<Noticia> noticias = new ArrayList<>();
+        LocalDate fechaHoy = LocalDate.now();
+
+        for (Noticia n : noticiaRepository.findAllByOrderByFechaPublicacionDesc()) {
+            
+            LocalDate fechaNoticia = n.getFechaPublicacion().toLocalDate();
+            
+            if (fechaHoy.equals(fechaNoticia)) {
+                noticias.add(n);
+            } else break;
         }
 
         return noticias;

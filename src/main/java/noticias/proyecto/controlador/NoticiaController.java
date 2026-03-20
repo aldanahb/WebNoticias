@@ -2,6 +2,8 @@ package noticias.proyecto.controlador;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +39,7 @@ public class NoticiaController {
     @GetMapping("/")
     public String paginaPrincipal(Model model) {
 
-        List<Noticia> noticias = noticiaService.obtenerTodasLasNoticias();
+        List<Noticia> noticias = noticiaService.obtenerNoticiasDelDia();
 
         model.addAttribute("noticias", noticias);
         model.addAttribute("bannerLink", "https://www.turismoentrerios.com");
@@ -116,13 +118,15 @@ public class NoticiaController {
         if(id != null) noticia = noticiaService.obtenerNoticia(id);
         else {
             noticia = new Noticia();
-            noticia.setFechaPublicacion(LocalDate.now());
+            noticia.setFechaPublicacion(LocalDateTime.now());
         }
 
         if (fechaStr != null && !fechaStr.isEmpty()) {
-            noticia.setFechaPublicacion(LocalDate.parse(fechaStr));
-        } else if (id == null) {
-            noticia.setFechaPublicacion(LocalDate.now());
+            LocalDate nuevaFecha = LocalDate.parse(fechaStr);
+            LocalTime horaOriginal = (noticia.getFechaPublicacion() != null)
+                ? noticia.getFechaPublicacion().toLocalTime()
+                : LocalTime.now();
+            noticia.setFechaPublicacion(nuevaFecha.atTime(horaOriginal));
         }
 
         noticia.setTitulo(titular);

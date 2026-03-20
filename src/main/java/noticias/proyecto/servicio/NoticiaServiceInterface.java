@@ -9,6 +9,7 @@ public interface NoticiaServiceInterface {
     public Noticia obtenerNoticia(int id);
     public Noticia guardarNoticia(Noticia noticia);
     public List<Noticia> obtenerTodasLasNoticias(); // devolver en orden (más reciente)
+    public List<Noticia> obtenerNoticiasDelDia(); // devolver en orden (según hora)
     public List<Noticia> obtenerNoticiasPorTipo(String tipo);
     public void eliminarNoticia(int id);
 
