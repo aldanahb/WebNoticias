@@ -39,7 +39,7 @@ public class NoticiaController {
     @GetMapping("/")
     public String paginaPrincipal(Model model) {
 
-        List<Noticia> noticias = noticiaService.obtenerNoticiasDelDia();
+        List<Noticia> noticias = noticiaService.obtenerNoticiasRecientes();
 
         model.addAttribute("noticias", noticias);
         model.addAttribute("bannerLink", "https://www.turismoentrerios.com");
