@@ -202,10 +202,19 @@ public class NoticiaController {
 
     @GetMapping("/seccion/{tipo}")
     public String verSeccion(@PathVariable String tipo, Model model) {
-        String tipoCapitalizado = tipo.substring(0, 1).toUpperCase() + tipo.substring(1).toLowerCase();
-        List<Noticia> noticias = noticiaService.obtenerNoticiasPorTipo(tipoCapitalizado);
+        // poner primera letra en mayúscula
+        String tipoFormateado = tipo.substring(0, 1).toUpperCase() + tipo.substring(1).toLowerCase();
+        
+        // casos especiales con acento
+        if (tipoFormateado.equals("Politica")) {
+            tipoFormateado = "Política";
+        } else if (tipoFormateado.equals("Economia")) {
+            tipoFormateado = "Economía";
+        }
+
+        List<Noticia> noticias = noticiaService.obtenerNoticiasPorTipo(tipoFormateado);
         model.addAttribute("noticias", noticias);
-        model.addAttribute("seccion", tipoCapitalizado);
+        model.addAttribute("seccion", tipoFormateado);
         return "seccion";
     }
 

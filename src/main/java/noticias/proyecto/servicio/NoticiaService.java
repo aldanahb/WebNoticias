@@ -42,6 +42,9 @@ public class NoticiaService implements NoticiaServiceInterface {
 
             LocalDate fechaNoticia = n.getFechaPublicacion().toLocalDate();
             
+            System.out.println(fechaHoy); 
+            System.out.println(fechaNoticia);
+            
             if (fechaHoy.equals(fechaNoticia)) {
                 noticiasDeHoy.add(n);
             } else break;
