@@ -50,9 +50,9 @@ public class NoticiaService implements NoticiaServiceInterface {
             } else break;
         }
 
-        if(!noticiasDeHoy.isEmpty()) return noticiasDeHoy; // si hay noticias de hoy, se devuelven esas
+        if(noticiasDeHoy.isEmpty() || noticiasDeHoy.size() < 20) return todasLasNoticias.stream().limit(20).collect(Collectors.toList()); // si no hay noticias de hoy o son menos de 20, devolver últimas 20 noticias
 
-        else return todasLasNoticias.stream().limit(7).collect(Collectors.toList()); // si no hay noticias de hoy, se devuelven las últimas 7 cargadas
+        else return noticiasDeHoy; // si hay noticias de hoy y son más de 20, devolverlas
     }
 
     public List<Noticia> obtenerNoticiasPorTipo(String tipo) {
