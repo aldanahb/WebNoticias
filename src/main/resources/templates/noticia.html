@@ -38,16 +38,17 @@ nav a.active { color: #fff; border-bottom: 3px solid var(--accent); }
 .breadcrumb a:hover { color: var(--ink); }
 .breadcrumb-sep { color: var(--border); }
 .breadcrumb-current { color: var(--ink); }
+/* ─── PAGE LAYOUT ─── */
 .page {
   max-width: 1400px;
   width: 100%;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 200px 1fr 200px;
-  gap: 0;
+  grid-template-columns: 250px 1fr 250px; 
+  gap: 24px; 
   align-items: start;
   padding: 32px 24px;
-  flex: 1; /* <-- esto hace que el page estire y empuje el footer abajo */
+  flex: 1;
 }
 .banner-col { padding: 0; position: sticky; top: 52px; display: flex; flex-direction: column; gap: 20px; }
 .banner-slot { border: 1.5px solid var(--border); background: var(--white); display: block; text-decoration: none; overflow: hidden; transition: border-color .2s, box-shadow .2s; }
@@ -146,7 +147,20 @@ footer strong { color: rgba(255,255,255,.6); }
   }
   .banner-col:first-child { display: flex; }
   .banner-col:last-child  { display: flex; }
-  .banner-slot { flex: 1; }
+  .banner-slot {
+    border: 1.5px solid var(--border);
+    background: var(--white);
+    display: block;
+    text-decoration: none;
+    overflow: hidden;
+    transition: border-color .2s, box-shadow .2s;
+    width: 100%; 
+  }
+  .banner-slot img {
+    display: block;
+    width: 100%;
+    height: auto; 
+  }
 
   /* Simplificar banners en móvil para que no sean altísimos */
   .banner-body { padding: 16px 10px; }
@@ -205,7 +219,7 @@ footer strong { color: rgba(255,255,255,.6); }
 
 <div class="page">
 
-  <aside class="banner-col">
+  <aside class="banner-col" style="visibility: hidden;">
     <a class="banner-slot" href="#">
       <div class="banner-label">Publicidad</div>
       <div class="banner-body b-a">
@@ -215,7 +229,7 @@ footer strong { color: rgba(255,255,255,.6); }
         <button class="b-a-btn">Descargá</button>
       </div>
     </a>
-    <a class="banner-slot" href="#">
+    <a class="banner-slot" href="#" style="visibility: hidden;">
       <div class="banner-label">Publicidad</div>
       <div class="b-empty"><span>Tu publicidad</span><strong>aquí</strong></div>
     </a>
@@ -281,18 +295,14 @@ footer strong { color: rgba(255,255,255,.6); }
 
   </main>
 
-  <aside class="banner-col">
-    <a class="banner-slot" href="#">
-      <div class="banner-label">Publicidad</div>
-      <div class="banner-body b-b">
-        <div class="b-b-fish">🎣</div>
-        <div class="b-b-badge">Semana Santa</div>
-        <h3>Para pescar<br>en Entre Ríos</h3>
-        <p>Paquetes completos<br>18–20 Abril 2026</p>
-        <button class="b-b-btn">Reservar</button>
-      </div>
+  <aside class="banner-col" style="width: 100%; min-width: 100%;">
+      <a class="banner-slot" href="https://www.senadoer.gob.ar" target="_blank" style="display: block; width: 100%; text-align: center;">
+        <div class="banner-label">Publicidad</div>
+        <img src="https://res.cloudinary.com/dr2z2mypg/image/upload/v1778081655/SENADO-_BANNER_yh8x5o.png"
+            style="width: 100% !important; height: auto !important; display: block;"
+            alt="Publicidad">
     </a>
-    <a class="banner-slot" href="#">
+    <a class="banner-slot" href="#" style="visibility: hidden;">
       <div class="banner-label">Publicidad</div>
       <div class="b-empty"><span>Tu publicidad</span><strong>aquí</strong></div>
     </a>
